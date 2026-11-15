@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asclepius Crew Health</title>
+<meta name="description" content="Autonomous health monitoring for astronauts on deep-space missions: personalised baselines, anomaly detection with differential diagnosis, onboard protocols and live space-radiation data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#05080f; --panel:#0b111c; --panel2:#101828; --line:#1c2638; --text:#e7edf7; --muted:#8796ad;
+  --accent:#5eead4; --blue:#60a5fa; --ok:#34d399; --caution:#fbbf24; --warn:#fb923c; --crit:#f43f5e; --violet:#a78bfa;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.45}
+a{color:var(--accent)}
+header{display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#071420,#05080f);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:34px;height:34px;border-radius:9px;background:conic-gradient(from 200deg,#5eead4,#60a5fa,#a78bfa,#5eead4);display:grid;place-items:center;box-shadow:0 0 20px #5eead433}
+.logo svg{width:20px;height:20px}
+.brand h1{font-size:17px;margin:0;letter-spacing:.16em;font-weight:800}
+.brand small{display:block;color:var(--muted);font-size:11.5px;font-weight:500}
+.controls{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px}
+button{cursor:pointer}button:hover{border-color:var(--accent)}
+button.primary{background:#0d3b3a;border-color:#1f7f78;color:#ccfbf1;font-weight:600}
+button.danger{background:#3b0d18;border-color:#8a1f37;color:#ffd1da;font-weight:600}
+.clock{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.clock b{color:var(--text)}
+nav.tabs{display:flex;gap:4px;padding:0 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+nav.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;background:none;padding:10px 12px;color:var(--muted);font-weight:600}
+nav.tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+.view{display:none}.view.on{display:block}
+#mc{display:grid;grid-template-columns:330px minmax(0,1fr) 340px;min-height:calc(100vh - 104px)}
+.col{border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 104px)}
+.col:last-child{border-right:none}
+.sec{padding:13px 15px;border-bottom:1px solid var(--line)}
+.sec h2{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.crew{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cc{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:9px;cursor:pointer;position:relative}
+.cc.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.cc .nm{font-weight:700;font-size:12.5px}
+.cc .role{color:var(--muted);font-size:10.5px}
+.cc .row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.cc .v{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.5}
+.cc .v b{color:var(--text)}
+.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:999px;color:#06101a}
+.ring{width:46px;height:46px;flex:none}
+.env{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tile{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:7px 9px}
+.tile small{display:block;color:var(--muted);font-size:10.5px}
+.tile b{font-family:var(--mono);font-size:16px}
+#issmap{width:100%;border-radius:10px;border:1px solid var(--line);display:block;background:#02050a}
+.muted{color:var(--muted)}
+.small{font-size:11.5px}
+.det-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.det-head .big{font-size:20px;font-weight:800}
+.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.chartcard{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.chartcard .t{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;color:var(--muted)}
+.chartcard .t b{font-family:var(--mono);font-size:17px;color:var(--text)}
+.chartcard .z{font-family:var(--mono);font-size:10.5px}
+.chartbox{height:96px}
+.diff .item{display:grid;grid-template-columns:150px 1fr 42px;gap:8px;align-items:center;margin:5px 0;font-size:12.5px}
+.track{height:8px;background:#1a2436;border-radius:5px;overflow:hidden}
+.fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#60a5fa,#5eead4)}
+.lt{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lt .tile b{font-size:15px}
+.bar2{height:6px;background:#1a2436;border-radius:4px;margin-top:5px;overflow:hidden}
+.bar2 i{display:block;height:100%}
+.feed .al{border:1px solid var(--line);border-left:3px solid var(--caution);background:var(--panel2);border-radius:10px;padding:9px 10px;margin-bottom:8px;font-size:12.5px}
+.feed .al .h{display:flex;justify-content:space-between;gap:6px;font-weight:700}
+.feed .al .m{color:var(--muted);font-size:11.5px;font-family:var(--mono)}
+.feed .al .act{margin-top:6px;padding:6px 8px;background:#0a1220;border-radius:7px;font-size:12px}
+.feed .al .eta{margin-top:5px;font-size:11px;color:var(--violet);font-family:var(--mono)}
+.auto{display:flex;align-items:center;gap:10px}
+.pulse{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 #5eead488;animation:p 2s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 #5eead488}70%{box-shadow:0 0 0 10px #5eead400}100%{box-shadow:0 0 0 0 #5eead400}}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 18px 60px}
+.wrap h2{font-size:22px;margin:4px 0 8px}
+.wrap h3{font-size:15px;margin:22px 0 6px;color:#ccfbf1}
+.wrap p,.wrap li{color:#c6d1e1}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card .n{font-family:var(--mono);font-size:26px;font-weight:700;margin-top:4px}
+.card .vs{font-size:12px;color:var(--muted);margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+td.mono{font-family:var(--mono)}
+.formula{display:block;font-family:var(--mono);font-size:12.5px;background:#0a1322;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0;white-space:pre-wrap;color:#cffafe}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.banner{display:none;padding:8px 18px;background:#2b0b14;border-bottom:1px solid #7a1d34;color:#ffc2cf;font-size:13px}
+.banner.on{display:block}
+.note{font-size:11.5px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin-top:10px}
+@media (max-width:1200px){ #mc{grid-template-columns:300px minmax(0,1fr)} #mc .col:last-child{grid-column:1 / -1;border-top:1px solid var(--line);max-height:none} }
+@media (max-width:800px){
+  #mc{grid-template-columns:1fr} .col{max-height:none;border-right:none}
+  .charts{grid-template-columns:repeat(2,minmax(0,1fr))} .lt{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:repeat(2,1fr)} .grid2{grid-template-columns:1fr}
+  header{padding:10px 16px}.controls{margin-left:0}
+  .diff .item{grid-template-columns:110px 1fr 38px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></div>
+    <div><h1>ASCLEPIUS</h1><small>Autonomous crew health monitoring for deep-space missions</small></div></div>
+  <div class="controls">
+    <select id="mission" title="Mission profile">
+      <option value="iss">ISS · low Earth orbit</option>
+      <option value="moon">Artemis · lunar surface</option>
+      <option value="mars" selected>Mars transit</option>
+    </select>
+    <span class="clock" id="clock">–</span>
+    <select id="speed" title="Simulation speed">
+      <option value="1">1 min/s</option><option value="4" selected>4 min/s</option><option value="15">15 min/s</option><option value="60">60 min/s</option>
+    </select>
+    <button id="pause">Pause</button>
+    <select id="inject"><option value="">Inject a medical event…</option></select>
+  </div>
+</header>
+<div class="banner" id="banner"></div>
+<nav class="tabs">
+  <button data-v="mc" class="on">Mission control</button>
+  <button data-v="val">Validation</button>
+  <button data-v="sci">Science &amp; method</button>
+</nav>
+
+<section class="view on" id="v-mc">
+  <div id="mc">
+    <div class="col">
+      <div class="sec"><h2><span>Crew status</span><span id="crewSum"></span></h2><div class="crew" id="crew"></div></div>
+      <div class="sec"><h2><span>Cabin environment</span><span class="muted">ECLSS</span></h2><div class="env" id="env"></div></div>
+      <div class="sec">
+        <h2><span>Space radiation · live</span><span id="radSrc" class="muted">NOAA GOES</span></h2>
+        <div class="env" id="rad"></div>
+        <div class="chartbox" style="height:80px;margin-top:8px"><canvas id="goesCh"></canvas></div>
+        <div class="small muted" id="goesNote" style="margin-top:4px">Loading live GOES proton flux…</div>
+        <h2 style="margin-top:14px"><span>ISS position · live</span><span id="issTag" class="muted">–</span></h2>
+        <canvas id="issmap" width="640" height="320"></canvas>
+        <div class="small muted" id="issNote" style="margin-top:4px">Shaded ellipse: South Atlantic Anomaly, where trapped-proton dose rates spike.</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="sec" id="detHead"></div>
+      <div class="sec"><h2><span>Vitals vs. personalised expected band (±2σ)</span><span class="muted">last 4 h</span></h2><div class="charts" id="charts"></div>
+        <div class="note">The shaded band is what <b>this astronaut's</b> body should be doing right now. It is built from their own baseline, the crew timeline (sleep, work, exercise, EVA) and their circadian phase. Alerts fire on deviation from the band, not on fixed limits, so a 150 bpm workout is normal but 95 bpm at rest can be an early warning.</div></div>
+      <div class="sec"><h2><span>Onboard differential diagnosis</span><span class="muted">signature match</span></h2><div class="diff" id="diff"></div></div>
+      <div class="sec"><h2><span>Long-duration risk outlook</span><span class="muted">model estimates</span></h2><div class="lt" id="lt"></div></div>
+    </div>
+
+    <div class="col">
+      <div class="sec">
+        <h2><span>Autonomy</span><span id="autoTag"></span></h2>
+        <div class="auto"><div class="pulse"></div><div><b id="delayTxt">–</b><div class="small muted" id="autoTxt">–</div></div></div>
+      </div>
+      <div class="sec"><h2><span>Alerts &amp; onboard actions</span><button id="clearFeed" style="padding:2px 8px;font-size:11px">Clear</button></h2><div class="feed" id="feed"><div class="muted small">No alerts. Inject a medical event from the top bar to see the system respond.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-val">
+  <div class="wrap">
+    <h2>Does it work? Monte Carlo validation</h2>
+    <p>Each trial simulates one astronaut's 10-hour shift with a random physiology, a randomly timed exercise session and realistic sensor noise. In 60% of trials a medical event of random type is injected at a random time with random severity (50–110% of nominal). The rest are healthy controls. ASCLEPIUS sees the sensor stream exactly as it would in flight. Its calibration, time constants and circadian phase are deliberately imperfect, so it never knows the true physiology. We compare it with standard fixed alarm limits (HR &gt;120 or &lt;40, SpO₂ &lt;92%, RR &gt;24, T &gt;38.0 °C, SBP &lt;90 or &gt;160), muted during exercise to be fair.</p>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="primary" id="runVal">Run 400 trials</button>
+      <button id="runVal2">Re-run with a new random seed</button>
+      <span class="muted small" id="valStatus"></span>
+    </div>
+    <div class="cards" id="valCards"></div>
+    <table id="valTab"></table>
+    <div class="note" id="valNote" style="display:none"></div>
+  </div>
+</section>
+
+<section class="view" id="v-sci">
+  <div class="wrap">
+    <h2>Why this matters</h2>
+    <p>On the ISS, a flight surgeon in Houston is a voice call away. On the way to Mars, a one-way signal takes 3 to 22 minutes, so a question and answer can take 45 minutes or more, and communication blackouts can last for weeks. NASA's roadmap calls for <b>Earth-independent medical operations</b>. The crew and their software must detect, triage and act alone. Fixed alarm limits built for hospital beds fail in space for two reasons. Exercise, which astronauts do for about 2 hours a day, constantly triggers them. And subtle early warnings, like a fever starting or slow dehydration, stay "in range" until it is late. ASCLEPIUS learns each astronaut's own normal for every activity and time of day, detects deviations early, explains them, names the likely cause, and gives the onboard protocol immediately.</p>
+
+    <div class="grid2">
+      <div class="card"><h3 style="margin-top:0">What is real and what is simulated</h3>
+        <ul>
+          <li><b>Live and real:</b> GOES ≥10 MeV and ≥100 MeV proton flux (NOAA SWPC, the radiation environment right now), live ISS position and South Atlantic Anomaly crossings, and NASA GIBS Blue Marble imagery.</li>
+          <li><b>Grounded in NASA research:</b> mission dose rates (ISS, lunar surface, Mars cruise), the 600 mSv career limit, bone-loss rates, in-flight core-temperature rise, and communication delays.</li>
+          <li><b>Simulated:</b> crew vital signs. Real astronaut medical telemetry is not public, so a physiological model generates it. The detection software would run unchanged on real wearable feeds such as Bio-Monitor, Astroskin or ECG patches.</li>
+        </ul></div>
+      <div class="card"><h3 style="margin-top:0">Pipeline (runs in the browser, about 1 ms per crew-minute)</h3>
+        <ol>
+          <li>Ingest 6 vitals per astronaut per minute: HR, HRV (RMSSD), SpO₂, respiration, core temperature, systolic BP.</li>
+          <li>Predict the expected value from the personal baseline, the timeline-driven activity response (first-order lag), the circadian term and a slow adaptive bias.</li>
+          <li>Compute uncertainty-aware z-scores. Uncertainty grows with exertion and during transitions.</li>
+          <li>Detect with a smoothed multivariate score for acute events and a two-sided CUSUM for slow drifts, plus hard safety floors.</li>
+          <li>Diagnose by matching the deviation pattern against known pathophysiology signatures, fused with cabin sensors.</li>
+          <li>Act: show the onboard protocol now, and queue an Earth consult with an ETA that accounts for light-time delay.</li>
+        </ol></div>
+    </div>
+
+    <h3>Detection maths</h3>
+    <span class="formula">expected_v(t) = base_v + lag( activity_offset_v(timeline), τ_v ) + circadian_v(t) + bias_v
+σ_v(t)      = √( σ_sensor² + (0.17·|activity_offset|)² + (0.35·|transition gap|)² + σ_calib² )
+z_v         = EWMA( (x_v − expected_v) / σ_v )
+S           = max( max|z| / 3.3 ,  rms(z) / 1.7 )          → alert if S &gt; 1 for 3 min
+CUSUM_v     = max(0, C + z·√((1−φ)/(1+φ)) − 0.5)  (two-sided, φ≈0.8 noise autocorrelation)  → drift alert if C &gt; 10
+Hard floors : SpO₂ &lt; 90%, T &gt; 38.5 °C, HR &gt; 170 or &lt; 40, SBP &lt; 85 → critical</span>
+    <h3>Differential diagnosis</h3>
+    <p>Each condition has a physiological signature, the direction and size of its effect on the six vitals, expressed in units of σ. The observed z-vector is compared with every signature by cosine similarity. For example, hypoxia is SpO₂↓↓ with HR↑ and RR↑; atrial fibrillation is HR↑ with HRV↑↑ (an irregular rhythm) and BP↓; heat stress is T↑↑ with HR↑↑. Cabin CO₂ sensor data raises or lowers the CO₂ hypothesis. The output is a ranked differential, not a black box.</p>
+    <h3>Long-duration risks (NASA Human Research Program)</h3>
+    <ul>
+      <li><b>Radiation.</b> ISS about 0.3–0.8 mSv/day. Lunar surface about 1.37 mSv/day (Chang'e-4 LND, Zhang et al. 2020). Mars cruise about 1.84 mSv/day (Curiosity RAD, Zeitlin et al. 2013) and Mars surface about 0.64 mSv/day (Hassler et al. 2014), so a conjunction-class Mars mission totals about 1 Sv. NASA's career limit is 600 mSv (NASA-STD-3001, 2022).</li>
+      <li><b>Bone.</b> Weight-bearing bone loses about 1–1.5% of mineral density per month without effective countermeasures (LeBlanc et al. 2000). Resistive exercise mitigates this. The model scales loss by exercise compliance and gravity.</li>
+      <li><b>Thermoregulation.</b> Core body temperature rises by about 1 °C during long-duration flight (Stahn et al. 2017), so heat-stress margins are narrower.</li>
+      <li><b>SANS</b> (Spaceflight-Associated Neuro-ocular Syndrome). Headward fluid shift. Risk grows with mission duration and is flagged for ocular imaging.</li>
+      <li><b>CO₂.</b> Elevated cabin ppCO₂ is linked to headaches and reduced performance. The crew-health target is about 3 mmHg or below.</li>
+    </ul>
+    <h3>Roadmap</h3>
+    <ul>
+      <li>Ingest real wearable streams (ECG R-R intervals, PPG, ingestible temperature pill) through a standard medical device interface.</li>
+      <li>Replace the fixed signature library with a model trained on analog-mission data (HERA, CHAPEA) and ISS research datasets via NASA's Life Sciences Data Archive.</li>
+      <li>Sleep, cognitive and behavioural-health modules (a key Mars risk).</li>
+      <li>Radiation shelter scheduling linked to DONKI solar particle event forecasts.</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+"use strict";
+// ================= Model constants =================
+const VITALS = [
+  {k:"hr",   name:"Heart rate",  unit:"bpm",  sd:2.5,  dec:0},
+  {k:"hrv",  name:"HRV (RMSSD)", unit:"ms",   sd:5,    dec:0},
+  {k:"spo2", name:"SpO₂",        unit:"%",    sd:0.45, dec:1},
+  {k:"rr",   name:"Respiration", unit:"/min", sd:1.0,  dec:0},
+  {k:"temp", name:"Core temp",   unit:"°C",   sd:0.06, dec:2},
+  {k:"sbp",  name:"Systolic BP", unit:"mmHg", sd:4,    dec:0},
+];
+const VK = VITALS.map(v=>v.k), VSD = Object.fromEntries(VITALS.map(v=>[v.k,v.sd])), VBY = Object.fromEntries(VITALS.map(v=>[v.k,v]));
+const OFFS = {
+  sleep:   {hr:-8, hrv:12, spo2:-0.3, rr:-2, temp:-0.35, sbp:-8},
+  work:    {hr:0, hrv:0, spo2:0, rr:0, temp:0, sbp:0},
+  exercise:{hr:65, hrv:-25, spo2:-0.5, rr:12, temp:0.7, sbp:30},
+  eva:     {hr:30, hrv:-12, spo2:0.4, rr:6, temp:0.3, sbp:12},
+};
+const TAU = {hr:3, hrv:4, spo2:3, rr:3, temp:18, sbp:4};
+const CIRC = {hr:3, temp:0.25, sbp:3};
+const CAL_ERR = {hr:1.5, hrv:4, spo2:0.3, rr:0.6, temp:0.05, sbp:3};
+const PHI = 0.8;
+const DECOR = Math.sqrt((1-0.8)/(1+0.8));   // effective-sample correction for autocorrelated physiology noise
+const CUSUM_H = 10;
+const CAL_LEARNED = 0.5;                     // in-flight baseline learned over the mission → half the pre-flight calibration error
+const ANOM = {
+  hypoxia:     {name:"Hypoxia (O₂ supply fault)", eff:{spo2:-9, hr:14, rr:6, hrv:-10}, ramp:8,
+                act:"Switch to 100% O₂ mask or suit purge, verify O₂ partial pressure, abort EVA and return to the airlock. Recheck SpO₂ in 2 min."},
+  hyperthermia:{name:"Heat stress (cooling failure)", eff:{temp:1.6, hr:28, rr:4, hrv:-12, sbp:-6}, ramp:35,
+                act:"Stop exertion and maximise LCVG coolant flow or switch to backup cooling. Give oral fluids. Abort EVA if core temperature exceeds 38.5 °C."},
+  fever:       {name:"Infection / fever", eff:{temp:1.3, hr:13, rr:3, hrv:-10}, ramp:150,
+                act:"Rest and hydrate. Do a symptom check (respiratory, urinary, skin). Give an antipyretic from the onboard formulary. Consider isolation and log for the flight surgeon."},
+  arrhythmia:  {name:"Cardiac arrhythmia (AF pattern)", eff:{hr:28, hrv:55, sbp:-12}, ramp:2,
+                act:"Stop all exertion and record a 12-lead ECG. Assess for chest pain, dizziness and shortness of breath. Follow the rate-control checklist. Urgent flight-surgeon consult."},
+  dehydration: {name:"Orthostatic / dehydration", eff:{hr:16, sbp:-18, hrv:-10, temp:0.25}, ramp:90,
+                act:"Fluid-load 1 L of isotonic solution. Use a compression garment and avoid rapid g-load or posture changes. Recheck BP in 15 min."},
+  co2:         {name:"Hypercapnia (cabin CO₂)", eff:{rr:5, hr:8, sbp:6, hrv:-6}, ramp:40,
+                act:"Check scrubber status. Increase ventilation at crew locations and swap the CO₂ cartridge. Move crew to the best-ventilated module and watch for headaches."},
+};
+const MISSIONS = {
+  iss:  {name:"ISS", day:96, len:180, dose:0.5, delay:0.5, g:0, label:"Low Earth orbit", proj:180*0.5},
+  moon: {name:"Artemis", day:12, len:30, dose:1.37, delay:1.3, g:0.166, label:"Lunar surface", proj:30*1.37},
+  // Mars conjunction-class: 2×180 d cruise @1.84 mSv/d (Zeitlin 2013) + ~600 d surface @0.64 mSv/d (Hassler 2014) ≈ 1.05 Sv
+  mars: {name:"Mars", day:140, len:960, dose:1.84, delay:750, g:0, label:"Mars transit", proj:360*1.84+600*0.64},
+};
+const CREW_DEF = [
+  {id:0, name:"R. Okafor",  role:"Commander",          prior:62,  comp:0.95},
+  {id:1, name:"A. Qureshi", role:"Mission Specialist", prior:18,  comp:0.88},
+  {id:2, name:"L. Moreau",  role:"Flight Engineer",    prior:120, comp:0.80},
+  {id:3, name:"K. Tanaka",  role:"Pilot",              prior:35,  comp:0.70},
+];
+const EX_BLOCK = [[9,10.5],[10.5,12],[14,15.5],[15.5,17]];
+
+// ================= RNG =================
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function randn(r){ let u=0,v=0; while(u===0)u=r(); while(v===0)v=r(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const $=s=>document.querySelector(s);
+
+// ================= Physiology simulator =================
+function makePerson(r){
+  const p={ base:{hr:56+r()*12, hrv:32+r()*28, spo2:97.3+r()*1.3, rr:12+r()*3, temp:37.05+r()*0.35, sbp:106+r()*16},
+    tauS:0.7+r()*0.7, offS:0.85+r()*0.3, circPh:(r()-0.5)*2, off:{}, n:{}, anoms:[] };
+  VK.forEach(k=>{p.off[k]=0;p.n[k]=0;}); return p;
+}
+function anomFrac(a,t){ return t<a.onset?0:Math.min(1,(t-a.onset)/ANOM[a.type].ramp); }
+function stepPerson(p,t,act,r){
+  const h=(t/60)%24, x={};
+  for(const v of VITALS){ const k=v.k;
+    const tgt=(OFFS[act][k]||0)*p.offS;
+    p.off[k]+=(tgt-p.off[k])*(1-Math.exp(-1/(TAU[k]*p.tauS)));
+    const circ=(CIRC[k]||0)*Math.cos(2*Math.PI*(h-17-p.circPh)/24);
+    let an=0; for(const a of p.anoms) an+=(ANOM[a.type].eff[k]||0)*a.mag*anomFrac(a,t);
+    p.n[k]=PHI*p.n[k]+Math.sqrt(1-PHI*PHI)*v.sd*randn(r);
+    let val=p.base[k]+p.off[k]+circ+an+p.n[k];
+    if(k==="hrv"){ if(p.anoms.some(a=>a.type==="arrhythmia"&&t>=a.onset)) val+=12*randn(r); val=Math.max(4,val); }
+    if(k==="spo2") val=Math.min(100,val);
+    x[k]=val;
+  }
+  return x;
+}
+
+// ================= Onboard detector =================
+function makeDetector(p,r){
+  const d={base:{},off:{},bias:{},zs:{},cp:{},cn:{},circPh:p.circPh+(r()-0.5)*1.5,above:0,below:0,alert:false};
+  VK.forEach(k=>{ d.base[k]=p.base[k]+CAL_LEARNED*CAL_ERR[k]*randn(r); d.off[k]=0; d.bias[k]=0; d.zs[k]=0; d.cp[k]=0; d.cn[k]=0; });
+  return d;
+}
+function stepDetector(d,t,act,x){
+  const h=(t/60)%24, z={}, e={}, sd={};
+  for(const v of VITALS){ const k=v.k;
+    const tgt=OFFS[act][k]||0;
+    d.off[k]+=(tgt-d.off[k])*(1-Math.exp(-1/TAU[k]));
+    const circ=(CIRC[k]||0)*Math.cos(2*Math.PI*(h-17-d.circPh)/24);
+    e[k]=d.base[k]+d.off[k]+circ+d.bias[k];
+    sd[k]=Math.sqrt((v.sd*1.15)**2+(0.17*d.off[k])**2+(0.35*(tgt-d.off[k]))**2+(CAL_LEARNED*CAL_ERR[k])**2);
+    if(k==="spo2") e[k]=Math.min(100,e[k]);
+    const zr=(x[k]-e[k])/sd[k];
+    d.zs[k]=0.65*d.zs[k]+0.35*zr; z[k]=d.zs[k];
+    // CUSUM on decorrelated residual: AR(1) noise (φ≈0.8) inflates running sums by (1+φ)/(1−φ)=9 → scale by 1/3
+    const zc=zr*DECOR;
+    d.cp[k]=Math.max(0,d.cp[k]+zc-0.5); d.cn[k]=Math.max(0,d.cn[k]-zc-0.5);
+  }
+  let maxz=0,ss=0; VK.forEach(k=>{maxz=Math.max(maxz,Math.abs(z[k])); ss+=z[k]*z[k];});
+  const S=Math.max(maxz/3.3, Math.sqrt(ss/VK.length)/1.7);
+  const cus=Math.max(...VK.map(k=>Math.max(d.cp[k],d.cn[k])));
+  const drift=cus>CUSUM_H;
+  const hard = x.spo2<90 || x.temp>38.5 || x.hr>170 || x.hr<40 || x.sbp<85;
+  d.above = (S>1||drift) ? d.above+1 : 0;
+  let fired=false;
+  if(!d.alert && (d.above>=3 || hard)){ d.alert=true; d.below=0; fired=true; }
+  else if(d.alert){ d.below = (S<0.7 && !drift && !hard) ? d.below+1 : 0;
+    if(d.below>=15){ d.alert=false; VK.forEach(k=>{d.cp[k]=0;d.cn[k]=0;}); } }
+  if(!d.alert && S<0.6 && act!=="exercise") VK.forEach(k=>{ d.bias[k]+=0.004*(x[k]-e[k]); });
+  const sev = hard?"critical":(S>1.8?"warning":"caution");
+  return {S,z,e,sd,drift,hard,fired,active:d.alert,sev,cus};
+}
+function differential(z, co2){
+  const zv=VK.map(k=>z[k]); const nz=Math.hypot(...zv)||1;
+  return Object.entries(ANOM).map(([id,A])=>{
+    const tv=VK.map(k=>(A.eff[k]||0)/VSD[k]); const nt=Math.hypot(...tv);
+    let s=Math.max(0, zv.reduce((a,x,i)=>a+x*tv[i],0)/(nz*nt));
+    if(id==="co2"){ if(co2>4) s=Math.min(1,s+0.3); else if(co2<3.3) s*=0.5; }
+    return {id,name:A.name,s};
+  }).sort((a,b)=>b.s-a.s);
+}
+function fixedAlarm(x,act){
+  if(act==="exercise") return false;
+  return x.hr>120||x.hr<40||x.spo2<92||x.rr>24||x.temp>38.0||x.sbp<90||x.sbp>160;
+}
+
+// ================= Live mission state =================
+let MISSION=MISSIONS[$("#mission").value], T=8*60+30, DAY=MISSION.day, RUN=true, SPEED=4, acc=0, SEL=0, ACK=new Set();
+const rng=mulberry32(20261115);
+let CREW=[], ALERTS=[], SPE=null, SHELTER=false, CO2F=null, ISS=null, GOES=null;
+const HMAX=240;
+function initCrew(){
+  CREW=CREW_DEF.map((c,i)=>{ const p=makePerson(rng); const d=makeDetector(p,rng);
+    return {...c,p,d,hist:Object.fromEntries(VK.map(k=>[k,[]])),last:null,res:null,dose:0,eva:false,alertObj:null}; });
+}
+function activity(c,t){
+  if(c.eva) return "eva";
+  const h=(t/60)%24; if(h>=23||h<7) return "sleep";
+  const b=EX_BLOCK[c.id]; if(h>=b[0]&&h<b[1]) return "exercise";
+  return "work";
+}
+function co2Level(t){ let v=2.4+0.15*Math.sin(t/37); if(CO2F) v+=5.2*Math.min(1,Math.max(0,(t-CO2F)/40)); return v; }
+function doseRate(){ // mSv/day
+  let r=MISSION.dose; if(MISSION===MISSIONS.iss && ISS && ISS.saa) r*=4;
+  if(SPE && T>=SPE.t && T<SPE.t+SPE.dur) r*=60;
+  return r;
+}
+function step(){
+  T+=1; if(T>=1440){T-=1440; DAY++;}
+  const tAbs=DAY*1440+T, co2=co2Level(tAbs);
+  for(const c of CREW){
+    const act=activity(c,T);
+    const x=stepPerson(c.p,tAbs,act,rng);
+    const res=stepDetector(c.d,tAbs,act,x);
+    c.last=x; c.res=res; c.act=act;
+    c.dose += doseRate()/1440*(SHELTER?0.3:1);
+    for(const k of VK){ const h=c.hist[k]; h.push({t:tAbs,x:x[k],e:res.e[k],sd:res.sd[k]}); if(h.length>HMAX) h.shift(); }
+    if(res.fired) raiseAlert(c,res,co2,tAbs);
+    else if(res.active && c.alertObj && rank(res.sev)>rank(c.alertObj.sev)){ c.alertObj.sev=res.sev; c.alertObj.explain=explain(c,res); renderFeed(); }
+    if(!res.active) c.alertObj=null;
+  }
+  const crewAlerting=CREW.filter(c=>c.res&&c.res.active).length;
+  if(co2>4 && !envFlag.co2){ envFlag.co2=true; pushAlert({kind:"env",sev:"warning",title:"Cabin CO₂ high: "+co2.toFixed(1)+" mmHg",crew:"Habitat",explain:`ppCO₂ is above the ~3 mmHg crew-health target. ${crewAlerting} crew member(s) currently show physiological deviation.`,act:ANOM.co2.act,t:tAbs}); }
+  if(co2<3.2) envFlag.co2=false;
+  if(SPE && T>=SPE.t && !envFlag.spe){ envFlag.spe=true; pushAlert({kind:"rad",sev:"critical",title:"Solar particle event: dose rate ×60",crew:"All crew",explain:`Dose rate ${doseRate().toFixed(0)} mSv/day. Unsheltered, a 6-hour event adds about ${(MISSION.dose*60*0.25).toFixed(0)} mSv per astronaut.`,act:"Move all crew to the storm shelter (water and stowage-shielded module) now. Suspend EVA. Wear dosimeters. Stay sheltered until the ≥10 MeV flux drops below 10 pfu.",t:tAbs,shelter:true}); }
+  if(SPE && T>=SPE.t+SPE.dur){ SPE=null; envFlag.spe=false; SHELTER=false; }
+}
+const envFlag={co2:false,spe:false};
+const rank=s=>({caution:1,warning:2,critical:3}[s]||0);
+function explain(c,res){
+  return VK.map(k=>({k,z:res.z[k]})).sort((a,b)=>Math.abs(b.z)-Math.abs(a.z)).slice(0,3)
+    .map(o=>{ const v=VBY[o.k]; return `${v.name} ${c.last[o.k].toFixed(v.dec)}${v.unit==="%"?"%":" "+v.unit} (expected ${c.res.e[o.k].toFixed(v.dec)}, ${o.z>0?"+":""}${o.z.toFixed(1)}σ)`; }).join(" · ");
+}
+function raiseAlert(c,res,co2,t){
+  const dx=differential(res.z,co2); const top=dx[0];
+  const a={kind:"med",sev:res.sev,crewId:c.id,crew:`${c.name} · ${c.role}`,title:(res.drift&&!res.hard&&res.S<1?"Slow drift: ":"")+(top.s>0.55?top.name:"Unclassified deviation"),
+    conf:top.s,dx:dx.slice(0,3),explain:explain(c,res),act:top.s>0.55?ANOM[top.id].act:"Do a crew wellness check, verify sensor placement, repeat vitals manually and log for the flight surgeon.",t};
+  c.alertObj=a; pushAlert(a);
+}
+function pushAlert(a){ a.id=Math.random().toString(36).slice(2); ALERTS.unshift(a); ALERTS=ALERTS.slice(0,40); renderFeed(); }
+
+// ================= Rendering =================
+const SEVC={nominal:"var(--ok)",caution:"var(--caution)",warning:"var(--warn)",critical:"var(--crit)"};
+function fmtT(t){ const d=Math.floor(t/1440), m=t%1440; return `MD ${d} · ${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`; }
+function hiOf(c){ return c.res? Math.round(clamp(100-35*Math.max(0,c.res.S-0.35),0,100)) : 100; }
+function statusOf(c){ return c.res&&c.res.active? c.res.sev : "nominal"; }
+function ring(v,color){ const r=19,C=2*Math.PI*r; return `<svg class="ring" viewBox="0 0 46 46"><circle cx="23" cy="23" r="${r}" fill="none" stroke="#1a2436" stroke-width="5"/><circle cx="23" cy="23" r="${r}" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*v/100} ${C}" transform="rotate(-90 23 23)"/><text x="23" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#e7edf7">${v}</text></svg>`; }
+const ACTL={sleep:"Sleeping",work:"Work",exercise:"Exercise",eva:"EVA"};
+function renderCrew(){
+  $("#crew").innerHTML=CREW.map(c=>{ const st=statusOf(c), col=SEVC[st], x=c.last||{};
+    return `<div class="cc${SEL===c.id?" sel":""}" data-id="${c.id}">
+      <div class="nm">${c.name}</div><div class="role">${c.role} · ${ACTL[c.act]||""}</div>
+      <div class="row">${ring(hiOf(c),col)}<div class="v">♥ <b>${x.hr?x.hr.toFixed(0):"–"}</b> bpm<br>SpO₂ <b>${x.spo2?x.spo2.toFixed(1):"–"}</b>%<br>T <b>${x.temp?x.temp.toFixed(1):"–"}</b>°C</div></div>
+      <div style="margin-top:6px"><span class="badge" style="background:${col}">${st.toUpperCase()}</span></div></div>`; }).join("");
+  document.querySelectorAll(".cc").forEach(el=>el.onclick=()=>{SEL=+el.dataset.id; renderAll(true);});
+  const n=CREW.filter(c=>c.res&&c.res.active).length; $("#crewSum").innerHTML = n? `<span style="color:var(--warn)">${n} alerting</span>` : `<span style="color:var(--ok)">all nominal</span>`;
+}
+function renderEnv(){
+  const tAbs=DAY*1440+T, co2=co2Level(tAbs);
+  const tiles=[["ppCO₂",co2.toFixed(1)+" mmHg",co2>4?"var(--warn)":(co2>3?"var(--caution)":"var(--text)")],["O₂",(21+0.1*Math.sin(tAbs/53)).toFixed(1)+" %","var(--text)"],["Cabin temp",(22.4+0.3*Math.sin(tAbs/90)).toFixed(1)+" °C","var(--text)"],["Humidity",(44+3*Math.sin(tAbs/71)).toFixed(0)+" %","var(--text)"]];
+  $("#env").innerHTML=tiles.map(t=>`<div class="tile"><small>${t[0]}</small><b style="color:${t[2]}">${t[1]}</b></div>`).join("");
+  const c=CREW[SEL], dr=doseRate();
+  const rt=[["Dose rate (model)",dr.toFixed(dr>10?0:2)+" mSv/d",dr>MISSION.dose*2?"var(--crit)":"var(--text)"],["Shelter",SHELTER?"OCCUPIED":"open",SHELTER?"var(--accent)":"var(--muted)"]];
+  if(GOES){ rt.push(["GOES ≥10 MeV",GOES.p10.toPrecision(2)+" pfu",GOES.p10>=10?"var(--crit)":"var(--ok)"],["NOAA S-scale",GOES.s,GOES.p10>=10?"var(--crit)":"var(--ok)"]); }
+  $("#rad").innerHTML=rt.map(t=>`<div class="tile"><small>${t[0]}</small><b style="color:${t[2]}">${t[1]}</b></div>`).join("") + (SPE&&!SHELTER?`<button class="danger" id="shelterBtn" style="grid-column:1/-1">Send crew to storm shelter</button>`:"");
+  if($("#shelterBtn")) $("#shelterBtn").onclick=()=>{SHELTER=true; renderEnv();};
+}
+function renderDetail(){
+  const c=CREW[SEL]; if(!c.res) return; const st=statusOf(c), col=SEVC[st];
+  $("#detHead").innerHTML=`<div class="det-head">${ring(hiOf(c),col).replace('class="ring"','class="ring" style="width:60px;height:60px"')}
+    <div><div class="big">${c.name}</div><div class="muted small">${c.role} · ${MISSION.name} · activity: <b style="color:var(--text)">${ACTL[c.act]}</b> · status <b style="color:${col}">${st.toUpperCase()}</b></div>
+    <div class="muted small">Deviation score S = <b style="color:var(--text);font-family:var(--mono)">${c.res.S.toFixed(2)}</b> (alert &gt; 1.00) · drift CUSUM ${c.res.cus.toFixed(1)} / ${CUSUM_H}</div></div></div>`;
+  for(const v of VITALS){ const h=c.hist[v.k]; const ch=CHARTS[v.k]; if(!ch) continue;
+    ch.data.labels=h.map(o=>o.t);
+    ch.data.datasets[0].data=h.map(o=>o.e+2*o.sd); ch.data.datasets[1].data=h.map(o=>o.e-2*o.sd);
+    ch.data.datasets[2].data=h.map(o=>o.e); ch.data.datasets[3].data=h.map(o=>o.x);
+    const z=c.res.z[v.k]; ch.data.datasets[3].borderColor=Math.abs(z)>3?"#f43f5e":(Math.abs(z)>2?"#fbbf24":"#5eead4");
+    ch.update("none");
+    $(`#val-${v.k}`).textContent=c.last[v.k].toFixed(v.dec);
+    $(`#z-${v.k}`).innerHTML=`<span style="color:${Math.abs(z)>3?"var(--crit)":(Math.abs(z)>2?"var(--caution)":"var(--muted)")}">${z>0?"+":""}${z.toFixed(1)}σ</span>`;
+  }
+  const dx=differential(c.res.z, co2Level(DAY*1440+T));
+  $("#diff").innerHTML = (c.res.S<0.6? `<div class="muted small" style="margin-bottom:6px">No significant deviation. The scores below show which pattern current noise slightly resembles.</div>`:"")+
+    dx.slice(0,4).map(d=>`<div class="item"><span>${d.name}</span><div class="track"><div class="fill" style="width:${(d.s*100).toFixed(0)}%;opacity:${c.res.S<0.6?.35:1}"></div></div><b style="font-family:var(--mono);text-align:right">${(d.s*100).toFixed(0)}%</b></div>`).join("");
+  // long-term
+  const md=DAY, months=md/30.4, bmdRate=1.25*(1-0.6*c.comp)*(1-MISSION.g*2.5>0?1-MISSION.g*2.5:0.3);
+  const bmd=bmdRate*months, bmdEnd=bmdRate*MISSION.len/30.4;
+  const career=c.prior+c.dose, projected=c.prior+MISSION.proj;
+  const sansRisk = md<30?"Low":(md<120?"Moderate":"High");
+  const t1=(l,v,sub,p,colr)=>`<div class="tile"><small>${l}</small><b>${v}</b><div class="small muted">${sub}</div>${p!=null?`<div class="bar2"><i style="width:${clamp(p,0,100)}%;background:${colr}"></i></div>`:""}</div>`;
+  $("#lt").innerHTML=
+    t1("Career dose",career.toFixed(0)+" mSv",`${(career/6).toFixed(0)}% of the 600 mSv limit`,career/6,career>480?"var(--crit)":"var(--accent)")+
+    t1("Projected at mission end",projected.toFixed(0)+" mSv",projected>600?"<span style='color:var(--crit)'>exceeds limit: plan shielding</span>":"within limit",projected/6,projected>600?"var(--crit)":"var(--blue)")+
+    t1("Hip BMD loss (est.)","−"+bmd.toFixed(1)+"%",`→ −${bmdEnd.toFixed(1)}% by day ${MISSION.len}`,bmd*8,"var(--caution)")+
+    t1("Exercise compliance",(c.comp*100).toFixed(0)+"%",`SANS risk: ${sansRisk} (day ${md})`,c.comp*100,c.comp<0.8?"var(--warn)":"var(--ok)");
+}
+function renderAuto(){
+  const d=MISSION.delay; const txt = d<60? `${d.toFixed(1)} s one-way` : `${(d/60).toFixed(1)} min one-way to Earth`;
+  $("#delayTxt").textContent=`${MISSION.label}: ${txt}`;
+  const auto=d>=300;
+  $("#autoTag").innerHTML=auto?`<span style="color:var(--violet)">EARTH-INDEPENDENT</span>`:`<span style="color:var(--ok)">GROUND-LINKED</span>`;
+  $("#autoTxt").textContent=auto?`A flight-surgeon reply takes at least ${(2*d/60+10).toFixed(0)} min. ASCLEPIUS triages onboard and acts first.`:"The flight surgeon is reachable in real time. ASCLEPIUS pre-triages to save minutes.";
+}
+function renderFeed(){
+  if(!ALERTS.length){ $("#feed").innerHTML=`<div class="muted small">No alerts. Inject a medical event from the top bar to see the system respond.</div>`; return; }
+  const d=MISSION.delay;
+  $("#feed").innerHTML=ALERTS.map(a=>{ const col=SEVC[a.sev]; const eta=a.t+Math.ceil((2*d+600)/60);
+    return `<div class="al" style="border-left-color:${col}"><div class="h"><span>${a.title}</span><span class="badge" style="background:${col}">${a.sev.toUpperCase()}</span></div>
+    <div class="m">${fmtT(a.t)} · ${a.crew}${a.conf!=null?` · match ${(a.conf*100).toFixed(0)}%`:""}</div>
+    <div style="margin-top:4px">${a.explain}</div>
+    ${a.dx?`<div class="m" style="margin-top:4px">Differential: ${a.dx.map(x=>`${x.name.split(" (")[0]} ${(x.s*100).toFixed(0)}%`).join(" · ")}</div>`:""}
+    <div class="act"><b>Onboard action (now):</b> ${a.act}</div>
+    <div class="eta">↗ Earth consult queued · reply ETA ${d>=60?fmtT(eta):"real-time"}</div></div>`; }).join("");
+}
+function renderAll(force){ renderCrew(); renderEnv(); renderDetail(); $("#clock").innerHTML=`<b>${fmtT(DAY*1440+T)}</b> · ${MISSION.name}`; }
+
+// ================= Charts =================
+const CHARTS={};
+function buildCharts(){
+  $("#charts").innerHTML=VITALS.map(v=>`<div class="chartcard"><div class="t"><span>${v.name} <span class="muted">${v.unit}</span></span><span><b id="val-${v.k}">–</b> <span class="z" id="z-${v.k}"></span></span></div><div class="chartbox"><canvas id="c-${v.k}"></canvas></div></div>`).join("");
+  for(const v of VITALS){
+    CHARTS[v.k]=new Chart($(`#c-${v.k}`),{type:"line",data:{labels:[],datasets:[
+      {data:[],borderWidth:0,pointRadius:0,fill:false},
+      {data:[],borderWidth:0,pointRadius:0,fill:"-1",backgroundColor:"rgba(96,165,250,.16)"},
+      {data:[],borderColor:"rgba(148,163,184,.7)",borderDash:[3,3],borderWidth:1,pointRadius:0},
+      {data:[],borderColor:"#5eead4",borderWidth:1.6,pointRadius:0,tension:.2},
+    ]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{display:false},y:{ticks:{color:"#8796ad",font:{size:9},maxTicksLimit:4},grid:{color:"#162033"}}}}});
+  }
+}
+
+// ================= Live data: GOES + ISS =================
+async function loadGOES(){
+  try{
+    const r=await fetch("https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json"); const j=await r.json();
+    const p10=j.filter(o=>o.energy===">=10 MeV"), p100=j.filter(o=>o.energy===">=100 MeV");
+    const last=p10[p10.length-1]; const v=last.flux;
+    const s=v>=1e4?"S4+":v>=1e3?"S3":v>=100?"S2":v>=10?"S1":"S0 (quiet)";
+    GOES={p10:v,p100:(p100[p100.length-1]||{}).flux||0,s,time:last.time_tag};
+    if(GOESCH){ GOESCH.data.labels=p10.map(o=>o.time_tag.slice(11,16)); GOESCH.data.datasets[0].data=p10.map(o=>o.flux); GOESCH.data.datasets[1].data=p10.map(()=>10); GOESCH.update("none"); }
+    $("#goesNote").innerHTML=`Real-time GOES ≥10 MeV proton flux, last 24 h (updated ${last.time_tag.slice(11,16)} UTC). The dashed line marks the 10 pfu radiation-storm threshold. ${v>=10?"<b style='color:var(--crit)'>A real radiation storm is in progress.</b>":"The space environment is quiet right now."}`;
+    renderEnv();
+  }catch(e){ $("#goesNote").textContent="Live GOES feed unavailable (offline?). Using mission-model dose rates."; }
+}
+let GOESCH=null;
+function buildGoes(){
+  GOESCH=new Chart($("#goesCh"),{type:"line",data:{labels:[],datasets:[{data:[],borderColor:"#a78bfa",borderWidth:1.4,pointRadius:0},{data:[],borderColor:"#f43f5e",borderDash:[4,4],borderWidth:1,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{ticks:{color:"#8796ad",font:{size:9},maxTicksLimit:5},grid:{display:false}},y:{type:"logarithmic",min:0.05,ticks:{color:"#8796ad",font:{size:9},maxTicksLimit:4},grid:{color:"#162033"}}}}});
+}
+const mapImg=new Image(); mapImg.crossOrigin="anonymous";
+mapImg.src="https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=BlueMarble_ShadedRelief_Bathymetry&STYLES=&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=640&HEIGHT=320&FORMAT=image/jpeg";
+mapImg.onload=()=>drawISS();
+const TRAIL=[];
+function inSAA(lat,lon){ const a=((lon+45)/32)**2+((lat+27)/17)**2; return a<1; }
+function drawISS(){
+  const cv=$("#issmap"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  g.fillStyle="#02050a"; g.fillRect(0,0,W,H);
+  if(mapImg.complete&&mapImg.naturalWidth) { g.globalAlpha=.85; g.drawImage(mapImg,0,0,W,H); g.globalAlpha=1; }
+  const px=(lon)=>(lon+180)/360*W, py=(lat)=>(90-lat)/180*H;
+  g.save(); g.beginPath(); g.ellipse(px(-45),py(-27),32/360*W,17/180*H,0,0,2*Math.PI); g.fillStyle="rgba(244,63,94,.22)"; g.fill(); g.strokeStyle="rgba(244,63,94,.8)"; g.setLineDash([4,3]); g.stroke(); g.restore();
+  g.fillStyle="#ffc2cf"; g.font="11px Inter"; g.fillText("SAA",px(-50),py(-27)+4);
+  if(TRAIL.length>1){ g.strokeStyle="rgba(94,234,212,.7)"; g.lineWidth=1.5; g.beginPath(); TRAIL.forEach((p,i)=>{ const X=px(p[1]),Y=py(p[0]); if(i&&Math.abs(p[1]-TRAIL[i-1][1])>180) g.moveTo(X,Y); else i?g.lineTo(X,Y):g.moveTo(X,Y);}); g.stroke(); }
+  if(ISS){ const X=px(ISS.lon),Y=py(ISS.lat); g.beginPath(); g.arc(X,Y,6,0,2*Math.PI); g.fillStyle=ISS.saa?"#f43f5e":"#5eead4"; g.fill(); g.strokeStyle="#fff"; g.lineWidth=1.5; g.stroke(); }
+}
+async function loadISS(){
+  try{ const r=await fetch("https://api.wheretheiss.at/v1/satellites/25544"); const j=await r.json();
+    ISS={lat:j.latitude,lon:j.longitude,alt:j.altitude,saa:inSAA(j.latitude,j.longitude)}; TRAIL.push([j.latitude,j.longitude]); if(TRAIL.length>400) TRAIL.shift();
+    $("#issTag").innerHTML=ISS.saa?`<span style="color:var(--crit)">IN SAA</span>`:`<span style="color:var(--ok)">outside SAA</span>`;
+    $("#issNote").innerHTML=`ISS at ${ISS.lat.toFixed(1)}°, ${ISS.lon.toFixed(1)}°, ${ISS.alt.toFixed(0)} km (live). ${ISS.saa?"<b style='color:var(--crit)'>Crossing the South Atlantic Anomaly: dose rate about 4× the orbital average.</b>":"Shaded ellipse: South Atlantic Anomaly, where trapped-proton dose rates spike."}`;
+    drawISS();
+  }catch(e){ $("#issNote").textContent="Live ISS position unavailable."; }
+}
+
+// ================= Scenarios =================
+const SCEN=[
+  {id:"co2",label:"Cabin CO₂ scrubber degradation (all crew)"},
+  {id:"heat",label:"EVA cooling-garment failure → heat stress (Qureshi)"},
+  {id:"hypox",label:"Suit O₂ regulator fault on EVA → hypoxia (Moreau)"},
+  {id:"af",label:"New-onset atrial fibrillation (Okafor)"},
+  {id:"fever",label:"Developing infection / fever (Tanaka)"},
+  {id:"dehyd",label:"Orthostatic intolerance / dehydration (Qureshi)"},
+  {id:"spe",label:"Solar particle event (radiation storm)"},
+  {id:"clear",label:"Clear all injected events"},
+];
+function inject(id){
+  const tAbs=DAY*1440+T;
+  const add=(ci,type)=>{ CREW[ci].p.anoms.push({type,onset:tAbs+1,mag:1}); SEL=ci; };
+  if(id==="co2"){ CO2F=tAbs; CREW.forEach(c=>c.p.anoms.push({type:"co2",onset:tAbs+1,mag:0.9})); }
+  if(id==="heat"){ CREW[1].eva=true; add(1,"hyperthermia"); }
+  if(id==="hypox"){ CREW[2].eva=true; add(2,"hypoxia"); }
+  if(id==="af") add(0,"arrhythmia");
+  if(id==="fever") add(3,"fever");
+  if(id==="dehyd") add(1,"dehydration");
+  if(id==="spe"){ SPE={t:T+2,dur:360}; SHELTER=false; }
+  if(id==="clear"){ CREW.forEach(c=>{c.p.anoms=[];c.eva=false;}); CO2F=null; SPE=null; SHELTER=false; }
+  const sc=SCEN.find(s=>s.id===id);
+  const b=$("#banner"); if(id!=="clear"){ b.classList.add("on"); b.innerHTML=`<b>Injected:</b> ${sc.label}. Watch the vitals leave the expected band and the alert feed respond.`; } else b.classList.remove("on");
+  renderAll(true);
+}
+
+// ================= Validation (Monte Carlo) =================
+function runValidation(seed){
+  const r=mulberry32(seed), N=400, types=Object.keys(ANOM);
+  const agg={pos:0,detO:0,detF:0,latO:[],latF:[],cls:0,faO:0,faF:0,negMin:0}, per={};
+  types.forEach(t=>per[t]={n:0,dO:0,dF:0,latO:[],latF:[],cls:0});
+  for(let i=0;i<N;i++){
+    const p=makePerson(r), d=makeDetector(p,r);
+    const T0=420, LEN=600, exS=T0+60+Math.floor(r()*340), exD=60+Math.floor(r()*30);
+    const pos=r()<0.6; let an=null;
+    if(pos){ an={type:types[Math.floor(r()*types.length)],onset:T0+90+Math.floor(r()*400),mag:0.5+r()*0.6}; p.anoms.push(an); }
+    let fC=0,fOn=false,oFirst=null,fFirst=null,ok=false;
+    for(let t=T0;t<T0+LEN;t++){
+      const act=(t>=exS&&t<exS+exD)?"exercise":"work";
+      const x=stepPerson(p,t,act,r);
+      if(an && t===an.onset && d.alert){ d.alert=false; d.above=0; }
+      if(an && t===an.onset && fOn){ fOn=false; }
+      const res=stepDetector(d,t,act,x);
+      const co2=an&&an.type==="co2"?2.4+5*an.mag*anomFrac(an,t):2.4+0.15*Math.sin(t/37);
+      if(res.fired){ if(!an||t<an.onset) agg.faO++; else if(oFirst===null){ oFirst=t; ok=differential(res.z,co2)[0].id===an.type; } }
+      const fa=fixedAlarm(x,act); fC=fa?fC+1:0;
+      if(fC>=3 && !fOn){ fOn=true; if(!an||t<an.onset) agg.faF++; else if(fFirst===null) fFirst=t; }
+      if(!fa && fOn && fC===0) fOn=false;
+    }
+    agg.negMin += an? (an.onset-T0) : LEN;
+    if(an){ agg.pos++; const P=per[an.type]; P.n++;
+      if(oFirst!==null){ agg.detO++; P.dO++; agg.latO.push(oFirst-an.onset); P.latO.push(oFirst-an.onset); if(ok){agg.cls++;P.cls++;} }
+      if(fFirst!==null){ agg.detF++; P.dF++; agg.latF.push(fFirst-an.onset); P.latF.push(fFirst-an.onset); } }
+  }
+  return {agg,per,N,seed};
+}
+const med=a=>{ if(!a.length) return null; const s=[...a].sort((x,y)=>x-y); return s[Math.floor(s.length/2)]; };
+function showValidation(seed){
+  $("#valStatus").textContent="running…";
+  setTimeout(()=>{
+    const t0=performance.now(); const R=runValidation(seed); const ms=performance.now()-t0; const A=R.agg;
+    const sO=A.detO/A.pos*100, sF=A.detF/A.pos*100, faO=A.faO/A.negMin*1440, faF=A.faF/A.negMin*1440, lO=med(A.latO), lF=med(A.latF);
+    const card=(k,n,vs,col)=>`<div class="card"><div class="k">${k}</div><div class="n" style="color:${col}">${n}</div><div class="vs">${vs}</div></div>`;
+    $("#valCards").innerHTML=card("Events detected",sO.toFixed(0)+"%",`fixed limits: ${sF.toFixed(0)}%`,"var(--accent)")+
+      card("False alarms / crew-day",faO.toFixed(2),`fixed limits: ${faF.toFixed(2)}`,"var(--accent)")+
+      card("Median time to detect",lO==null?"–":lO+" min",`fixed limits: ${lF==null?"never":lF+" min"}`,"var(--accent)")+
+      card("Correct diagnosis (top-1)",(A.cls/Math.max(1,A.detO)*100).toFixed(0)+"%",`of detected events · fixed limits: n/a`,"var(--violet)");
+    const rows=Object.entries(R.per).map(([k,P])=>`<tr><td>${ANOM[k].name}</td><td class="mono">${P.n}</td><td class="mono"><b>${P.n?(P.dO/P.n*100).toFixed(0):"–"}%</b></td><td class="mono">${P.n?(P.dF/P.n*100).toFixed(0):"–"}%</td><td class="mono"><b>${med(P.latO)??"–"}</b> min</td><td class="mono">${med(P.latF)??"–"}${med(P.latF)!=null?" min":""}</td><td class="mono">${P.dO?(P.cls/P.dO*100).toFixed(0):"–"}%</td></tr>`).join("");
+    $("#valTab").innerHTML=`<thead><tr><th>Event type</th><th>Trials</th><th>Detected (ours)</th><th>Detected (fixed)</th><th>Median latency (ours)</th><th>Median latency (fixed)</th><th>Correct diagnosis</th></tr></thead><tbody>${rows}</tbody>`;
+    $("#valNote").style.display="block";
+    $("#valNote").innerHTML=`${R.N} trials (${A.pos} with an event, ${R.N-A.pos} healthy controls) and ${(R.N*600/60).toFixed(0)} simulated crew-hours, computed in ${ms.toFixed(0)} ms in your browser. Seed ${R.seed}. Severities are randomised down to 50%, so some events are deliberately subtle, and those are the ones fixed limits miss. Latency is measured from event onset, including the event's physiological ramp-up time. This is a simulation study. The detector and the simulator share the same physiological model family, even though their parameters are deliberately mismatched, so treat these numbers as an upper bound on real-world performance. Clinical validation needs real crew or analog-mission data (see Roadmap).`;
+    $("#valStatus").textContent="done";
+  },30);
+}
+
+// ================= Wiring =================
+SCEN.forEach(s=>{ const o=document.createElement("option"); o.value=s.id; o.textContent=s.label; $("#inject").appendChild(o); });
+$("#inject").onchange=e=>{ if(e.target.value){ inject(e.target.value); e.target.value=""; } };
+$("#pause").onclick=()=>{ RUN=!RUN; $("#pause").textContent=RUN?"Pause":"Resume"; };
+$("#speed").onchange=e=>SPEED=+e.target.value;
+$("#mission").onchange=e=>{ MISSION=MISSIONS[e.target.value]; DAY=MISSION.day; CREW.forEach(c=>c.dose=0); renderAuto(); renderFeed(); renderAll(true); if(MISSION===MISSIONS.iss) loadISS(); };
+$("#clearFeed").onclick=()=>{ ALERTS=[]; renderFeed(); };
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v)); document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x===b)); if(b.dataset.v==="val"&&!$("#valCards").innerHTML) showValidation(2026); });
+$("#runVal").onclick=()=>showValidation(2026);
+$("#runVal2").onclick=()=>showValidation(Math.floor(Math.random()*1e9));
+
+initCrew(); buildCharts(); buildGoes(); renderAuto();
+for(let i=0;i<240;i++) step();   // pre-roll 4 h so charts and baselines are populated
+ALERTS=[]; renderFeed(); renderAll(true);
+setInterval(()=>{ if(!RUN) return; acc+=SPEED/4; let n=Math.floor(acc); acc-=n; while(n-->0) step(); renderAll(); },250);
+loadGOES(); setInterval(loadGOES,5*60*1000);
+loadISS(); setInterval(loadISS,10000);
+</script>
+</body>
+</html>
