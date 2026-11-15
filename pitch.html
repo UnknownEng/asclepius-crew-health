@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asclepius Pitch</title>
+<meta name="description" content="60-second pitch for ASCLEPIUS, autonomous crew health monitoring for deep-space missions (NASA Space Apps 2026).">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#03060c;--text:#eef3fa;--muted:#8796ad;--accent:#5eead4;--blue:#60a5fa;--violet:#a78bfa;--crit:#f43f5e;--line:#1c2638;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,#0c2a33 0,transparent 45%),radial-gradient(circle at 85% 80%,#1a1440 0,transparent 45%);z-index:0}
+.stars{position:fixed;inset:0;z-index:0;background-image:radial-gradient(1px 1px at 10% 20%,#fff8,transparent),radial-gradient(1px 1px at 30% 70%,#fff6,transparent),radial-gradient(1.5px 1.5px at 70% 30%,#fff7,transparent),radial-gradient(1px 1px at 85% 60%,#fff5,transparent),radial-gradient(1px 1px at 50% 90%,#fff6,transparent),radial-gradient(1px 1px at 92% 12%,#fff8,transparent),radial-gradient(1.2px 1.2px at 15% 85%,#fff5,transparent)}
+.slide{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:6vh 8vw;opacity:0;transform:translateY(2vh);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.slide.on{opacity:1;transform:none;pointer-events:auto}
+.kicker{font-family:var(--mono);color:var(--accent);letter-spacing:.25em;text-transform:uppercase;font-size:1.5vw;margin-bottom:2vh}
+h1{font-size:6.2vw;line-height:1.02;margin:0;font-weight:900;letter-spacing:-.02em}
+h2{font-size:4.2vw;line-height:1.08;margin:0 0 3vh;font-weight:800;letter-spacing:-.01em}
+.big{font-size:17vw;font-weight:900;line-height:.9;background:linear-gradient(90deg,#5eead4,#60a5fa,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.04em}
+.sub{font-size:2.3vw;color:#c9d4e4;max-width:70vw;line-height:1.35}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:3vw}
+.card{background:#0b111ccc;border:1px solid var(--line);border-radius:1.4vw;padding:3vh 2.4vw}
+.card b{display:block;font-size:2.3vw;margin-bottom:1vh}
+.card span{font-size:1.7vw;color:#c9d4e4;line-height:1.4}
+.card.bad{border-color:#5a1a2b}.card.bad b{color:#ff8fa3}
+.shot{width:72vw;border-radius:1.2vw;border:1px solid #1f7f78;box-shadow:0 0 6vw #5eead422;animation:kb 14s ease-out forwards}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.06)}}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4vw}
+.step{background:#0b111ccc;border:1px solid var(--line);border-radius:1.4vw;padding:3vh 2vw;opacity:0;transform:translateY(2vh);transition:all .6s ease}
+.slide.on .step{opacity:1;transform:none}
+.slide.on .step:nth-child(2){transition-delay:1.2s}.slide.on .step:nth-child(3){transition-delay:2.4s}
+.step .n{font-family:var(--mono);color:var(--accent);font-size:1.6vw}
+.step b{display:block;font-size:2.5vw;margin:1vh 0}
+.step span{font-size:1.6vw;color:#c9d4e4;line-height:1.4}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2vw}
+.stat{background:#0b111ccc;border:1px solid var(--line);border-radius:1.4vw;padding:3vh 1.6vw}
+.stat .v{font-family:var(--mono);font-weight:700;font-size:5vw;color:var(--accent);line-height:1}
+.stat .k{font-size:1.5vw;color:#c9d4e4;margin-top:1.4vh}
+.stat .c{font-size:1.3vw;color:var(--muted);margin-top:.6vh;font-family:var(--mono)}
+.foot{position:fixed;left:8vw;bottom:4vh;font-size:1.1vw;color:var(--muted);font-family:var(--mono)}
+.chips{display:flex;gap:1.2vw;flex-wrap:wrap;margin-top:3vh}
+.chip{border:1px solid var(--line);background:#0b111ccc;border-radius:999px;padding:1.2vh 1.6vw;font-size:1.7vw}
+.chip i{font-style:normal;color:var(--accent)}
+.logo{width:7vw;height:7vw;border-radius:1.8vw;background:conic-gradient(from 200deg,#5eead4,#60a5fa,#a78bfa,#5eead4);display:grid;place-items:center;margin-bottom:3vh;box-shadow:0 0 5vw #5eead444}
+.logo svg{width:4vw;height:4vw}
+.progress{position:fixed;left:0;bottom:0;height:.5vh;background:linear-gradient(90deg,#5eead4,#a78bfa);z-index:3;width:0}
+.hint{position:fixed;right:2vw;bottom:2vh;z-index:3;font-size:12px;color:var(--muted);font-family:var(--mono)}
+.pulse{display:inline-block;width:1.2vw;height:1.2vw;border-radius:50%;background:var(--crit);margin-right:1vw;box-shadow:0 0 0 0 #f43f5e88;animation:p 1.6s infinite;vertical-align:middle}
+@keyframes p{0%{box-shadow:0 0 0 0 #f43f5e88}70%{box-shadow:0 0 0 2vw #f43f5e00}100%{box-shadow:0 0 0 0 #f43f5e00}}
+@media (max-aspect-ratio:1/1){ h1{font-size:11vw} h2{font-size:7vw} .sub{font-size:4.5vw;max-width:none} .grid2,.steps,.stats{grid-template-columns:1fr} .card b,.step b{font-size:5vw} .card span,.step span,.stat .k{font-size:3.8vw} .stat .v{font-size:10vw} .kicker{font-size:3vw} .shot{width:100%} .chip{font-size:3.6vw} }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<section class="slide" data-i="0">
+  <div class="kicker">NASA Space Apps Challenge 2026</div>
+  <div class="big">22 min</div>
+  <div class="sub" style="margin-top:2vh">The one-way delay for a message between Mars and a doctor on Earth.</div>
+</section>
+
+<section class="slide" data-i="1">
+  <div class="kicker">The problem</div>
+  <h2>Astronaut health alarms still use fixed, hospital-style limits.</h2>
+  <div class="grid2">
+    <div class="card bad"><b><span class="pulse"></span>False alarms</b><span>Astronauts exercise about 2 hours a day. Every workout trips a fixed heart-rate limit, so crews learn to ignore the alarms.</span></div>
+    <div class="card bad"><b>Late warnings</b><span>A fever building, slow dehydration, a failing CO₂ scrubber: all stay "in range" until the problem is serious.</span></div>
+  </div>
+</section>
+
+<section class="slide" data-i="2">
+  <div class="kicker">Our solution</div>
+  <h2 style="margin-bottom:2.5vh">ASCLEPIUS: the doctor on board.</h2>
+  <img class="shot" src="docs/dashboard.png" alt="ASCLEPIUS dashboard">
+</section>
+
+<section class="slide" data-i="3">
+  <div class="kicker">How it works</div>
+  <h2>Personal normal → early warning → action now.</h2>
+  <div class="steps">
+    <div class="step"><div class="n">01</div><b>Learn</b><span>Each astronaut's own expected heart rate, oxygen, temperature and more, for sleep, work, exercise and spacewalks.</span></div>
+    <div class="step"><div class="n">02</div><b>Detect &amp; explain</b><span>It flags deviations early and shows why in plain numbers, then ranks the likely cause: hypoxia, heat stress, infection, arrhythmia, dehydration, CO₂.</span></div>
+    <div class="step"><div class="n">03</div><b>Act now</b><span>The crew gets the onboard protocol immediately. An Earth consult is queued, with the reply time adjusted for light delay.</span></div>
+  </div>
+</section>
+
+<section class="slide" data-i="4">
+  <div class="kicker">Live space data</div>
+  <h2>It watches space too.</h2>
+  <div class="chips">
+    <span class="chip"><i>●</i> Live radiation · NOAA GOES satellites</span>
+    <span class="chip"><i>●</i> Live ISS position · South Atlantic Anomaly</span>
+    <span class="chip"><i>●</i> Lifetime dose vs NASA's 600 mSv limit</span>
+    <span class="chip"><i>●</i> Bone loss and SANS risk</span>
+    <span class="chip"><i>●</i> ISS · Moon · Mars mission profiles</span>
+  </div>
+</section>
+
+<section class="slide" data-i="5">
+  <div class="kicker">Does it work?</div>
+  <h2>400 simulated shifts vs. standard alarms.</h2>
+  <div class="stats">
+    <div class="stat"><div class="v">100%</div><div class="k">events caught</div><div class="c">standard: 64%</div></div>
+    <div class="stat"><div class="v">≈0</div><div class="k">false alarms / crew-day</div><div class="c">standard: 0.47</div></div>
+    <div class="stat"><div class="v">2×</div><div class="k">faster detection</div><div class="c">24 vs 48 min median</div></div>
+    <div class="stat"><div class="v">87%</div><div class="k">correct cause named</div><div class="c">standard: none</div></div>
+  </div>
+  <div class="foot">Simulation study with deliberately imperfect detector calibration. Real crew and analog-mission data validation is next.</div>
+</section>
+
+<section class="slide" data-i="6" style="align-items:center;text-align:center">
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></div>
+  <h1>ASCLEPIUS</h1>
+  <div class="sub" style="margin-top:2vh">The doctor on board, when Earth is too far away.</div>
+  <div class="chips" style="justify-content:center"><span class="chip">asclepius-crew-health.vercel.app</span><span class="chip">github.com/UnknownEng/asclepius-crew-health</span></div>
+</section>
+
+<div class="progress" id="prog"></div>
+<div class="hint">← → to navigate</div>
+<script>
+const S=[...document.querySelectorAll(".slide")];
+const DUR=window.PITCH_DUR||[6500,11000,8000,12000,7500,12500,8000];
+let i=0, timer=null, t0=0;
+function show(n){ i=Math.max(0,Math.min(S.length-1,n)); S.forEach((s,k)=>s.classList.toggle("on",k===i)); if(window.__slideStart) window.__slideStart(i);
+  clearTimeout(timer); t0=performance.now(); if(i<S.length-1 && !window.PITCH_MANUAL) timer=setTimeout(()=>show(i+1),DUR[i]); }
+function prog(){ const tot=DUR.reduce((a,b)=>a+b,0), done=DUR.slice(0,i).reduce((a,b)=>a+b,0)+Math.min(DUR[i],performance.now()-t0); document.getElementById("prog").style.width=(done/tot*100)+"%"; requestAnimationFrame(prog); }
+document.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"||e.key===" ") show(i+1); if(e.key==="ArrowLeft") show(i-1); });
+document.addEventListener("click",()=>show(i+1));
+setTimeout(()=>{ show(0); prog(); }, +(new URLSearchParams(location.search).get("delay")||300));
+</script>
+</body>
+</html>

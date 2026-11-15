@@ -98,6 +98,31 @@ td.mono{font-family:var(--mono)}
 .banner{display:none;padding:8px 18px;background:#2b0b14;border-bottom:1px solid #7a1d34;color:#ffc2cf;font-size:13px}
 .banner.on{display:block}
 .note{font-size:11.5px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin-top:10px}
+/* ---- intro + guided demo ---- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(3,6,12,.82);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.on{display:flex}
+.intro{max-width:620px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 28px;box-shadow:0 20px 80px #000a}
+.intro h2{margin:0 0 6px;font-size:24px}
+.intro p{color:#c6d1e1;margin:6px 0 14px}
+.intro ol{color:#c6d1e1;padding-left:20px;margin:0 0 18px}
+.intro li{margin:6px 0}
+.intro .btns{display:flex;gap:10px;flex-wrap:wrap}
+.intro .btns button{padding:10px 16px;font-size:14px}
+#demoBtn{background:#0d3b3a;border-color:#1f7f78;color:#ccfbf1;font-weight:700}
+.spot{outline:2px solid var(--accent)!important;outline-offset:-2px;box-shadow:0 0 0 6px #5eead433,0 0 50px #5eead455!important;border-radius:12px;position:relative;z-index:5;transition:box-shadow .3s}
+#caption{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;width:min(980px,calc(100% - 32px));background:rgba(5,10,18,.94);border:1px solid #1f7f78;border-radius:16px;padding:16px 20px 14px;box-shadow:0 10px 60px #000c;display:none}
+#caption.on{display:block}
+#caption .txt{font-size:21px;line-height:1.4;font-weight:600;color:#f1f5f9}
+#caption .bar{display:flex;align-items:center;gap:6px;margin-top:10px}
+#caption .dot{width:22px;height:4px;border-radius:2px;background:#1c2638}
+#caption .dot.on{background:var(--accent)}
+#caption .x{margin-left:auto;font-size:12px;padding:4px 10px}
+#endcard{position:fixed;inset:0;z-index:70;background:radial-gradient(circle at 50% 40%,#0b2a2a,#03060c 70%);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
+#endcard.on{display:flex}
+#endcard h1{font-size:64px;letter-spacing:.18em;margin:0}
+#endcard p{font-size:24px;color:#ccfbf1;margin:0}
+#endcard small{font-size:16px;color:var(--muted);font-family:var(--mono)}
+@media (max-width:800px){ #caption .txt{font-size:16px} #endcard h1{font-size:38px} }
 @media (max-width:1200px){ #mc{grid-template-columns:300px minmax(0,1fr)} #mc .col:last-child{grid-column:1 / -1;border-top:1px solid var(--line);max-height:none} }
 @media (max-width:800px){
   #mc{grid-template-columns:1fr} .col{max-height:none;border-right:none}
@@ -122,6 +147,7 @@ td.mono{font-family:var(--mono)}
     <select id="speed" title="Simulation speed">
       <option value="1">1 min/s</option><option value="4" selected>4 min/s</option><option value="15">15 min/s</option><option value="60">60 min/s</option>
     </select>
+    <button id="demoBtn">▶ Guided demo</button>
     <button id="pause">Pause</button>
     <select id="inject"><option value="">Inject a medical event…</option></select>
   </div>
@@ -231,6 +257,23 @@ Hard floors : SpO₂ &lt; 90%, T &gt; 38.5 °C, HR &gt; 170 or &lt; 40, SBP &lt;
     </ul>
   </div>
 </section>
+
+<div class="overlay" id="intro"><div class="intro">
+  <h2>ASCLEPIUS</h2>
+  <p><b>The doctor on board, when Earth is too far away.</b> On the way to Mars a message to a doctor on Earth takes up to 22 minutes each way, so this software watches a crew of four and acts first.</p>
+  <ol>
+    <li><b>Left:</b> crew status, cabin air and <i>live</i> space radiation.</li>
+    <li><b>Centre:</b> the selected astronaut's vitals. The shaded band is what <i>their</i> body should be doing right now. Leaving the band is the warning sign.</li>
+    <li><b>Right:</b> alerts with the likely cause and the action to take.</li>
+  </ol>
+  <p class="small muted" style="margin-top:-6px">Try it: use <b>"Inject a medical event"</b> in the top bar. Proof that it works is in the <b>Validation</b> tab.</p>
+  <div class="btns"><button class="primary" id="introDemo">▶ Watch the 60-second guided demo</button><button id="introClose">Explore on my own</button></div>
+</div></div>
+<div id="caption"><div class="txt" id="capTxt"></div><div class="bar" id="capBar"></div></div>
+<div id="endcard"><div class="logo" style="width:72px;height:72px;border-radius:18px"><svg viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:42px;height:42px"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></div>
+  <h1>ASCLEPIUS</h1><p>The doctor on board, when Earth is too far away.</p>
+  <small>asclepius-crew-health.vercel.app · NASA Space Apps Challenge 2026</small>
+  <button id="endClose" style="margin-top:18px">Back to mission control</button></div>
 
 <script>
 "use strict";
@@ -636,6 +679,49 @@ $("#clearFeed").onclick=()=>{ ALERTS=[]; renderFeed(); };
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v)); document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x===b)); if(b.dataset.v==="val"&&!$("#valCards").innerHTML) showValidation(2026); });
 $("#runVal").onclick=()=>showValidation(2026);
 $("#runVal2").onclick=()=>showValidation(Math.floor(Math.random()*1e9));
+
+// ================= Intro + guided demo =================
+function showTab(v){ document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v)); document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("on",x.dataset.v===v)); if(v==="val"&&!$("#valCards").innerHTML) showValidation(2026); }
+const DEMO=[
+  {t:"This is ASCLEPIUS, health monitoring for a crew of four on the way to Mars. Earth is twelve and a half light-minutes away, so the software on board has to be the first responder.", sel:()=>$("#delayTxt").closest(".sec")},
+  {t:"Every minute it reads six vital signs per astronaut. The shaded band is what this astronaut's body should be doing right now, learned from their own baseline, schedule and body clock.", sel:()=>$("#charts").closest(".sec"), act:()=>{SEL=2;}},
+  {t:"Now, a fault. Flight Engineer Moreau is on a spacewalk when the suit's oxygen regulator starts to fail.", sel:()=>$("#crew").closest(".sec"), act:()=>inject("hypox")},
+  {t:"Blood oxygen drops out of the expected band. Within minutes, ASCLEPIUS raises a critical alert, names hypoxia as the most likely cause, and shows exactly why.", sel:()=>$("#charts").closest(".sec")},
+  {t:"The crew gets the action to take immediately, and a consult with the flight surgeon on Earth is queued, with the reply time adjusted for light delay.", sel:()=>$("#feed").closest(".sec")},
+  {t:"It also watches the environment: live radiation from NOAA's GOES satellites, and the live position of the space station over the South Atlantic Anomaly.", sel:()=>$("#rad").closest(".sec")},
+  {t:"And the long game: lifetime radiation dose against NASA's six hundred millisievert limit, bone loss and eye-syndrome risk across the whole mission.", sel:()=>$("#lt").closest(".sec")},
+  {t:"Does it work? In four hundred simulated shifts it caught essentially every medical event with almost no false alarms. Standard alarms caught sixty-four percent, and took twice as long.", sel:()=>$("#valCards"), act:()=>showTab("val")},
+  {t:"", end:true},
+];
+let DEMO_ON=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function spot(el){ document.querySelectorAll(".spot").forEach(e=>e.classList.remove("spot")); if(el){ el.classList.add("spot"); el.scrollIntoView({block:"nearest",behavior:"smooth"}); } }
+function stopDemo(){ DEMO_ON=false; $("#caption").classList.remove("on"); spot(null); }
+async function runDemo(){
+  if(DEMO_ON) return; DEMO_ON=true;
+  $("#intro").classList.remove("on"); $("#endcard").classList.remove("on"); showTab("mc");
+  $("#mission").value="mars"; MISSION=MISSIONS.mars; renderAuto(); inject("clear"); ALERTS=[]; renderFeed();
+  SPEED=4; $("#speed").value="4"; RUN=true; $("#pause").textContent="Pause"; SEL=0; renderAll(true);
+  $("#caption").classList.add("on");
+  for(let i=0;i<DEMO.length;i++){
+    if(!DEMO_ON) return; const s=DEMO[i];
+    if(window.__stepStart) window.__stepStart(i);
+    if(s.end){ $("#caption").classList.remove("on"); spot(null); $("#endcard").classList.add("on"); break; }
+    if(s.act) s.act(); renderAll(true);
+    $("#capTxt").textContent=s.t; $("#capBar").innerHTML=DEMO.slice(0,-1).map((_,j)=>`<span class="dot${j<=i?" on":""}"></span>`).join("")+`<button class="x" id="capX">Exit demo ✕</button>`;
+    $("#capX").onclick=stopDemo;
+    await sleep(60); spot(s.sel&&s.sel());
+    await sleep((window.DEMO_DUR&&window.DEMO_DUR[i]) || Math.max(5000, s.t.length*68));
+  }
+  DEMO_ON=false;
+}
+$("#demoBtn").onclick=runDemo; $("#introDemo").onclick=runDemo;
+$("#introClose").onclick=()=>{ $("#intro").classList.remove("on"); try{localStorage.setItem("asc_intro","1");}catch(e){} };
+$("#endClose").onclick=()=>{ $("#endcard").classList.remove("on"); showTab("mc"); };
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ stopDemo(); $("#intro").classList.remove("on"); $("#endcard").classList.remove("on"); } });
+const QS=new URLSearchParams(location.search);
+if(QS.has("demo")) setTimeout(runDemo, +(QS.get("delay")||1200));
+else { let seen=false; try{ seen=!!localStorage.getItem("asc_intro"); }catch(e){} if(!seen && !QS.has("nointro")) $("#intro").classList.add("on"); }
 
 initCrew(); buildCharts(); buildGoes(); renderAuto();
 for(let i=0;i<240;i++) step();   // pre-roll 4 h so charts and baselines are populated

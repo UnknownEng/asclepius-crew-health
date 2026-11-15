@@ -3,11 +3,25 @@
 > **NASA Space Apps Challenge 2026**
 > **Challenge:** *Create Health Monitoring Software for Astronauts on Space Missions*
 
+### 🔗 [**Live app**](https://asclepius-crew-health.vercel.app) · [**Pitch deck**](https://asclepius-crew-health.vercel.app/pitch.html) · [**Demo video**](docs/asclepius-demo.mp4) · [**Pitch video**](docs/asclepius-pitch.mp4) · [**30-second cut**](docs/asclepius-30s.mp4)
+
+[![ASCLEPIUS demo: a suit oxygen fault is detected, diagnosed and acted on](docs/demo.gif)](docs/asclepius-demo.mp4)
+
+*Click the animation for the full narrated demo (about 1.5 min). In the live app, press **▶ Guided demo** for the same tour.*
+
+## 🎬 Videos
+
+| Video | Length | What it shows |
+|---|---|---|
+| [**Demo walkthrough**](docs/asclepius-demo.mp4) | ~1.5 min | Narrated guided tour of the live app: a suit O₂ fault during a spacewalk is detected, diagnosed and acted on. Also covers live radiation, long-term risk and validation. |
+| [**Pitch**](docs/asclepius-pitch.mp4) | ~1.3 min | The problem, the solution, how it works and the proof, in 7 slides with voice-over. Slides: [pitch.html](https://asclepius-crew-health.vercel.app/pitch.html) |
+| [**30-second cut**](docs/asclepius-30s.mp4) | 30 s | Short version for the Space Apps submission: fault → alert → action → results. |
+
 ![ASCLEPIUS mission control dashboard](docs/dashboard.png)
 
 ASCLEPIUS is browser-based health monitoring software for astronaut crews. It learns each astronaut's own physiological "normal" for every activity and time of day. It catches medical problems earlier and with fewer false alarms than standard fixed alarm limits, explains what it sees, ranks the likely cause, and gives the crew the onboard action immediately. That last part matters when Earth is 20 minutes away.
 
-**No install. No server. No API key.** Open `index.html` in any modern browser.
+**No install. No server. No API key.** Open `index.html` in any modern browser. First-time visitors get a short intro, and **▶ Guided demo** walks through everything in 60 seconds.
 
 ---
 
