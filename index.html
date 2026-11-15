@@ -1,7 +1,9 @@
 <!doctype html>
+<!-- SI disclosure: this code was developed with assistance from a Super Intelligence (SI) tool (Claude, Anthropic) for code generation and debugging, reviewed and directed by the ASCLEPIUS team. See README > Use of Super Intelligence (SI). -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="generator-note" content="SI disclosure: this code was developed with assistance from a Super Intelligence (SI) tool (Claude, Anthropic) for code generation and debugging, reviewed and directed by the ASCLEPIUS team. See README > Use of Super Intelligence (SI).">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Asclepius Crew Health</title>
 <meta name="description" content="Autonomous health monitoring for astronauts on deep-space missions: personalised baselines, anomaly detection with differential diagnosis, onboard protocols and live space-radiation data.">
@@ -706,7 +708,7 @@ function renderEvidence(force){
   if(!force && key===evKey) return; evKey=key;
   $("#evSrc").innerHTML = EV_LIVE? `<span style="color:var(--ok)">● live · NASA NTRS</span>` : `NASA NTRS${EVIDENCE&&EVIDENCE.fetched?` · snapshot ${EVIDENCE.fetched.slice(0,10)}`:""}`;
   if(!EVIDENCE){ $("#evidence").innerHTML=`<div class="muted small">NASA evidence unavailable.</div>`; return; }
-  const item=x=>`<div class="it"><div class="badge2">NASA</div><div><a href="https://ntrs.nasa.gov/citations/${encodeURIComponent(x.id)}" target="_blank" rel="noopener">${esc(x.title)}</a><div class="meta">${esc(x.year)} · ${esc(x.center||"NASA")} · NTRS ${esc(x.id)}</div>${x.abstract?`<div class="abs">${esc(x.abstract)}${x.abstract.length>=260?"…":""}</div>`:""}</div></div>`;
+  const item=x=>`<div class="it"><div class="badge2">NTRS</div><div><a href="https://ntrs.nasa.gov/citations/${encodeURIComponent(x.id)}" target="_blank" rel="noopener">${esc(x.title)}</a><div class="meta">${esc(x.year)} · ${esc(x.center||"NASA")} · NTRS ${esc(x.id)}</div>${x.abstract?`<div class="abs">${esc(x.abstract)}${x.abstract.length>=260?"…":""}</div>`:""}</div></div>`;
   if(topic){
     const name=ANOM[c.alertObj.dx[0].id].name;
     $("#evidence").innerHTML=`<div class="lead">Official NASA research on <b style="color:var(--text)">${name}</b>, the condition ASCLEPIUS is flagging for ${c.name}:</div>`+evItems(topic).map(item).join("");

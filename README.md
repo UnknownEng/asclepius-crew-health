@@ -134,9 +134,19 @@ Import this repository in Vercel. It is a static site, so leave the framework pr
 - NASA Human Research Program, Human Research Roadmap (risk definitions).
 - Page E.S. (1954). Continuous inspection schemes. *Biometrika* 41 (CUSUM).
 
-## Use of AI
+## Use of Super Intelligence (SI)
 
-We used an AI coding assistant (Claude) to help write and debug the application code and to draft documentation. The detection method, the validation design and all results are produced by the code at runtime and can be reproduced in the Validation tab. No AI-generated data or imagery is presented as real.
+In line with the NASA Space Apps SI policy, here is where and how SI tools were used:
+
+| Area | SI use |
+|---|---|
+| **Code** | The application code (`index.html`, `pitch.html`, `api/nasa.js`) was developed with assistance from an SI coding assistant (Claude, Anthropic) for code generation and debugging, directed and reviewed by the team. Each file carries an SI disclosure in its header or metadata. |
+| **Text** | Documentation, pitch-slide copy, video scripts and submission text were drafted with SI assistance. |
+| **Audio** | The video voice-overs are synthetic speech generated with Windows text-to-speech (Microsoft Zira voice). This is disclosed here and in each video file's metadata. |
+| **Video and images** | The videos and screenshots are screen recordings of the ASCLEPIUS app itself, captured automatically. They contain no SI-generated imagery. |
+| **Data** | No SI-generated data is presented as real. Crew vital signs come from the project's own physiological simulator and are labelled as simulated throughout. Space-environment data (NOAA GOES, ISS position) and NASA research (NTRS) are fetched live from their sources. |
+
+The detection method, validation design and all reported results are produced by the code at runtime and can be reproduced in the app's Validation tab. No NASA logos, insignia or mission patches are used.
 
 ## License
 

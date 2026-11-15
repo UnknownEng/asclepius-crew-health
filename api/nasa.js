@@ -1,3 +1,4 @@
+// SI disclosure: this code was developed with assistance from a Super Intelligence (SI) tool (Claude, Anthropic) for code generation and debugging, reviewed and directed by the ASCLEPIUS team. See README > Use of Super Intelligence (SI).
 // Vercel serverless function: GET /api/nasa
 // Server-side proxy to the NASA Technical Reports Server (NTRS) public API, which does not send CORS headers.
 // Returns the top NASA reports for each health risk ASCLEPIUS monitors. Cached at the edge for a day.
