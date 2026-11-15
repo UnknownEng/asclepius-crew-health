@@ -1,0 +1,243 @@
+{
+ "source": "NASA Technical Reports Server (ntrs.nasa.gov)",
+ "fetched": "2026-11-15T08:16:50.200Z",
+ "queries": {
+  "hypoxia": "hypoxia extravehicular activity",
+  "hyperthermia": "thermal stress extravehicular activity",
+  "fever": "immune dysregulation spaceflight",
+  "arrhythmia": "cardiac rhythm problems spaceflight",
+  "dehydration": "orthostatic intolerance spaceflight",
+  "co2": "carbon dioxide exposure crew",
+  "radiation": "space radiation exposure Mars mission",
+  "bone": "bone loss long duration spaceflight",
+  "sans": "spaceflight associated neuro-ocular syndrome"
+ },
+ "items": {
+  "hypoxia": [
+   {
+    "id": 20150008159,
+    "title": "2014 Decompression Sickness/Extravehicular Activity Risks Standing Review Panel",
+    "year": "2014",
+    "center": "Johnson Space Center",
+    "abstract": "The 2014 Decompression Sickness (DCS)/Extravehicular Activity (EVA) Risks Standing Review Panel (from here on referred to as the SRP) met for a site visit in Houston, TX on November 4 - 5, 2014. The SRP reviewed the Research Plans for The Risk of Decompression",
+    "url": "https://ntrs.nasa.gov/citations/20150008159"
+   },
+   {
+    "id": 20205010045,
+    "title": "Optimizing CO2 Washout in the Exploration Extravehicular Mobility Unit",
+    "year": "2020",
+    "center": "Johnson Space Center",
+    "abstract": "CO2 Washout refers to the suit’s ability to remove exhaled metabolic waste gases from the helmet before the crewmember’s next consecutive inhale. Efficient removal of such waste gases is paramount as it prevents crewmember fatigue as well as hypoxia. A variety",
+    "url": "https://ntrs.nasa.gov/citations/20205010045"
+   },
+   {
+    "id": 20230015130,
+    "title": "Effects of Mild Hypobaric Hypoxia on Visual Field Impairment",
+    "year": "2023",
+    "center": "Johnson Space Center",
+    "abstract": "INTRODUCTION: The primary objective of the Exploration Atmosphere (EA) study is to validate a new prebreathe protocol necessary before exposure to a suited hypobaric environment during extravehicular activity (EVA) from a habitat ‘exploration atmosphere’ of 56",
+    "url": "https://ntrs.nasa.gov/citations/20230015130"
+   }
+  ],
+  "hyperthermia": [
+   {
+    "id": 20210024317,
+    "title": "Chapter 5: Extravehicular Activity Metabolic Rate Model: Metabolic Rate Estimated from Heart Rate",
+    "year": "2021",
+    "center": "Johnson Space Center",
+    "abstract": "In-flight monitoring of crew metabolic rates during extravehicular activity (EVA) provides crucial information in mitigating injury. The purpose of this study was to investigate the relationship of crewmember heart rate (HR) and metabolic rate (MR) during EVA ",
+    "url": "https://ntrs.nasa.gov/citations/20210024317"
+   },
+   {
+    "id": 20040088497,
+    "title": "The exercise and environmental physiology of extravehicular activity",
+    "year": "2002",
+    "center": "Ames Research Center",
+    "abstract": "Extravehicular activity (EVA), i.e., exercise performed under unique environmental conditions, is indispensable for supporting daily living in weightlessness and for further space exploration. From 1965-1996 an average of 20 h x yr(-1) were spent performing EV",
+    "url": "https://ntrs.nasa.gov/citations/20040088497"
+   },
+   {
+    "id": 20210024108,
+    "title": "Chapter 6: Evaluation of Cardiothermal Model Prediction of Simulated Lunar Extravehicular Activity",
+    "year": "2021",
+    "center": "Johnson Space Center",
+    "abstract": "Fewer than 20 extravehicular activities were completed during the Apollo program. The lunar environment has consistent unknowns to address particularly that of suited performance in partial gravity. The moon has altered gravity that is 1/6th that of Earth’s. T",
+    "url": "https://ntrs.nasa.gov/citations/20210024108"
+   }
+  ],
+  "fever": [
+   {
+    "id": 20110008227,
+    "title": "Immune System Dysregulation and Herpesvirus Reactivation Persist During Long-Duration Spaceflight",
+    "year": "2011",
+    "center": "Johnson Space Center",
+    "abstract": "This poster presentation reviews a study that is designed to address immune system dysregulation and the risk to crewmembers in long duration exploration class missions. This study will address these objectives: (1) Determine the status of adaptive immunity ph",
+    "url": "https://ntrs.nasa.gov/citations/20110008227"
+   },
+   {
+    "id": 20210000525,
+    "title": "Beyond Low-Earth Orbit: Characterizing Immune and microRNA Differentials Following Simulated Deep Spaceflight Conditions in Mice",
+    "year": "2021",
+    "center": "Ames Research Center",
+    "abstract": "Spaceflight missions can cause immune system dysfunction in astronauts with little understanding of immune outcomes in deep space. This study assessed immune responses in mice following ground-based, simulated deep spaceflight conditions, compared to data from",
+    "url": "https://ntrs.nasa.gov/citations/20210000525"
+   },
+   {
+    "id": 20110008221,
+    "title": "NASA 14 Day Undersea Missions: A Short-Duration Spaceflight Analog for Immune System Dysregulation?",
+    "year": "2011",
+    "center": "Johnson Space Center",
+    "abstract": "This poster paper reviews the use of 14 day undersea missions as a possible analog for short duration spaceflight for the study of immune system dysregulation. Sixteen subjects from the the NASA Extreme Enviro nment Mission Operations (NEEMO) 12, 13 and 14 mis",
+    "url": "https://ntrs.nasa.gov/citations/20110008221"
+   }
+  ],
+  "arrhythmia": [
+   {
+    "id": 20170005625,
+    "title": "Risk of Cardiac Rhythm Problems During Spaceflight",
+    "year": "2017",
+    "center": "Johnson Space Center",
+    "abstract": "NASA has concerns regarding the incidence and clinical significance of cardiac arrhythmias that could occur during long-term exposure to the spaceflight environment, such as on the International Space Station (ISS) or during a prolonged (e.g., up to 3 years) s",
+    "url": "https://ntrs.nasa.gov/citations/20170005625"
+   },
+   {
+    "id": 20100017571,
+    "title": "Evidence Based Review: Risk of Cardiac Rhythm Problems During Spaceflight",
+    "year": "2009",
+    "center": "Johnson Space Center",
+    "abstract": "Very little research has systematically evaluated the prevalence (or potential risk) of cardiac arrhythmias during space flight. There are several observational reports of non life-threatening but potentially concerning arrhythmias. At least two potential risk",
+    "url": "https://ntrs.nasa.gov/citations/20100017571"
+   },
+   {
+    "id": 20190025476,
+    "title": "The Effects of CDKN1a/p21 on Oxidative Stress and Mitochondrial Function During Long Duration Spaceflight",
+    "year": "2017",
+    "center": "Ames Research Center",
+    "abstract": "Spaceflight factors, such as microgravity and space radiation, are known to put astronauts at risk for negative effects to their tissue regeneration and degenerative conditions. On our previous spaceflight research, we found that long duration spaceflight prod",
+    "url": "https://ntrs.nasa.gov/citations/20190025476"
+   }
+  ],
+  "dehydration": [
+   {
+    "id": 20040112435,
+    "title": "Midodrine prevents orthostatic intolerance associated with simulated spaceflight",
+    "year": "2001",
+    "center": "Legacy CDMS",
+    "abstract": "Many astronauts after being weightless in space become hypotensive and presyncopal when they assume an upright position. This phenomenon, known as orthostatic intolerance, may interfere with astronaut function during reentry and after spaceflight and may limit",
+    "url": "https://ntrs.nasa.gov/citations/20040112435"
+   },
+   {
+    "id": 20040089965,
+    "title": "Mechanisms of post-flight orthostatic intolerance",
+    "year": "1994",
+    "center": "Johnson Space Center",
+    "abstract": "Post-flight orthostatic intolerance is a dramatic physiological consequence of human adaptation to microgravity made inappropriate by a sudden return to 1-G. The immediate mechanism is almost always a failure to maintain adequate tissue perfusion, specifically",
+    "url": "https://ntrs.nasa.gov/citations/20040089965"
+   },
+   {
+    "id": 20040088627,
+    "title": "Marked exacerbation of orthostatic intolerance after long- vs. short-duration spaceflight in veteran astronauts",
+    "year": "2001",
+    "center": "Legacy CDMS",
+    "abstract": "OBJECTIVE: The incidence of postflight orthostatic intolerance after short-duration spaceflight is about 20%. However, the incidence after long-duration spaceflight was unknown. The purpose of this study was to test the hypothesis that orthostatic intolerance ",
+    "url": "https://ntrs.nasa.gov/citations/20040088627"
+   }
+  ],
+  "co2": [
+   {
+    "id": 20090029352,
+    "title": "Carbon Dioxide - Our Common \"Enemy\"",
+    "year": "2009",
+    "center": "Johnson Space Center",
+    "abstract": "Health effects of brief and prolonged exposure to carbon dioxide continue to be a concern for those of us who manage this pollutant in closed volumes, such as in spacecraft and submarines. In both examples, considerable resources are required to scrub the atmo",
+    "url": "https://ntrs.nasa.gov/citations/20090029352"
+   },
+   {
+    "id": 20070017835,
+    "title": "The Headache of Carbon Dioxide Exposures",
+    "year": "2007",
+    "center": "Johnson Space Center",
+    "abstract": "Carbon dioxide (CO2), a natural product of human metabolism, accumulates quickly in sealed environments when humans are present, and can induce headaches, among other symptoms. Major resources are expended to control CO2 levels to concentrations that are toler",
+    "url": "https://ntrs.nasa.gov/citations/20070017835"
+   },
+   {
+    "id": 20150012186,
+    "title": "Integrated Ultra-Wideband Tracking and Carbon Dioxide Sensing System Design for International Space Station Applications",
+    "year": "2015",
+    "center": "Johnson Space Center",
+    "abstract": "A three-dimensional (3D) Ultra-Wideband (UWB) Time-of-Arrival (TOA) tracking system has been studied at NASA Johnson Space Center (JSC) to provide the tracking capability inside the International Space Station (ISS) modules for various applications. One of app",
+    "url": "https://ntrs.nasa.gov/citations/20150012186"
+   }
+  ],
+  "radiation": [
+   {
+    "id": 20250006168,
+    "title": "Moon 2 Mars Space Radiation Protection “Buying Down” Risks to Crew",
+    "year": "2025",
+    "center": "Headquarters",
+    "abstract": "While working on the International Space Station (ISS), astronauts receive orders of magnitude more radiation exposure than any modern terrestrial radiation worker. As NASA develops long-duration mission capabilities beyond LEO, crew radiation exposures levels",
+    "url": "https://ntrs.nasa.gov/citations/20250006168"
+   },
+   {
+    "id": 20040112707,
+    "title": "Radiation exposure for human Mars exploration",
+    "year": "2000",
+    "center": "Legacy CDMS",
+    "abstract": "One major obstacle to human space exploration is the possible limitations imposed by the adverse effects of long-term exposure to the space environment. Even before human space flight began, the potentially brief exposure of astronauts to the very intense rand",
+    "url": "https://ntrs.nasa.gov/citations/20040112707"
+   },
+   {
+    "id": 20040088717,
+    "title": "Space Radiation Cancer Risks and Uncertainties for Mars Missions",
+    "year": "2001",
+    "center": "Johnson Space Center",
+    "abstract": "Projecting cancer risks from exposure to space radiation is highly uncertain because of the absence of data for humans and because of the limited radiobiology data available for estimating late effects from the high-energy and charge (HZE) ions present in the ",
+    "url": "https://ntrs.nasa.gov/citations/20040088717"
+   }
+  ],
+  "bone": [
+   {
+    "id": 20170000317,
+    "title": "Femoral Head Bone Loss Following Short and Long-Duration Spaceflight",
+    "year": "2016",
+    "center": "Ames Research Center",
+    "abstract": "Exposure to mechanical unloading during spaceflight is known to have significant effects on the musculoskeletal system. Our ongoing studies with the mouse bone model have identified the failure of normal stem cell-based tissue regeneration, in addition to tiss",
+    "url": "https://ntrs.nasa.gov/citations/20170000317"
+   },
+   {
+    "id": 20070032016,
+    "title": "Recovery of Spaceflight-induced Bone Loss: Bone Mineral Density after Long-Duration Missions as Fitted with an Exponential Function",
+    "year": "2007",
+    "center": "Johnson Space Center",
+    "abstract": "The loss of bone mineral in NASA astronauts during spaceflight has been investigated throughout the more than 40 years of space travel. Consequently, it is a medical requirement at NASA Johnson Space Center (JSC) that changes in bone mass be monitored in crew ",
+    "url": "https://ntrs.nasa.gov/citations/20070032016"
+   }
+  ],
+  "sans": [
+   {
+    "id": 20220016048,
+    "title": "Spaceflight Associated Neuro-Ocular Syndrome: A Brief for Astronaut Candidates",
+    "year": "2022",
+    "center": "Johnson Space Center",
+    "abstract": "INTRODUCTION: Spaceflight Associated Neuro-ocular Syndrome (SANS) was first described in 2011 as a clinical process involving degradation of visual acuity and structural changes of the eye when exposed to microgravity. This syndrome poses a risk to astronaut v",
+    "url": "https://ntrs.nasa.gov/citations/20220016048"
+   },
+   {
+    "id": 20220000516,
+    "title": "Spaceflight Associated Neuro-ocular Syndrome (SANS): Clinical Update",
+    "year": "2022",
+    "center": "Johnson Space Center",
+    "abstract": "Spaceflight Associated Neuro-ocular Syndrome (SANS) is a condition unique to long-duration spaceflight, with an unclear pathogenesis and pathophysiology, and no perfect terrestrial analog. Approximately 69% of long duration astronauts present with the earliest",
+    "url": "https://ntrs.nasa.gov/citations/20220000516"
+   },
+   {
+    "id": 20220008786,
+    "title": "Spaceflight Associated Neuro-Ocular Syndrome (Sans): Proposed Pathogenesis, Terrestrial Analogs, and Emerging Countermeasures",
+    "year": "2023",
+    "center": "Johnson Space Center",
+    "abstract": "Spaceflight Associated Neuro-ocular Syndrome (SANS) refers to a distinct constellation of ocular, neurological, and neuroimaging findings observed in astronauts during and following long duration spaceflight. These ocular findings, to include optic disc edema,",
+    "url": "https://ntrs.nasa.gov/citations/20220008786"
+   }
+  ]
+ }
+}

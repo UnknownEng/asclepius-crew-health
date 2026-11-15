@@ -71,6 +71,7 @@ During development the validation also caught our own bug. The first version pro
 **Tools.** HTML, CSS and JavaScript with Chart.js. Runs fully client-side, needs no install, and runs about 1 ms per crew-minute, which suits low-power onboard hardware.
 
 ## Space agency data used
+- **NASA Technical Reports Server (NTRS)**: NASA's official research archive. For every condition ASCLEPIUS diagnoses (hypoxia, heat stress, infection, cardiac arrhythmia, orthostatic intolerance, CO₂ exposure) and every long-duration risk (radiation, bone loss, SANS), the app pulls NASA's own reports live through a serverless proxy and shows them next to the alert. Examples include the Human Research Program evidence reports *"Risk of Cardiac Rhythm Problems During Spaceflight"* (JSC) and *"Spaceflight Associated Neuro-Ocular Syndrome: Clinical Update"*. https://ntrs.nasa.gov
 - **NOAA SWPC / GOES** (NOAA–NASA satellites): live integral proton flux at ≥10 MeV and ≥100 MeV. https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json
 - **NASA GIBS**: Blue Marble Shaded Relief and Bathymetry imagery for the ISS ground-track map. https://earthdata.nasa.gov/gibs
 - **ISS live ephemeris** (NORAD 25544) via the wheretheiss.at API.

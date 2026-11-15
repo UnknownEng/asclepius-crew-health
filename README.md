@@ -48,6 +48,7 @@ Wearable sensors already exist. The weak point is the alarm logic behind them. M
 | **Act now, consult later** | Every alert carries the onboard protocol immediately. An Earth consult is queued with a reply ETA that accounts for light-time delay. |
 | **Live space environment** | Real-time **GOES proton flux** (radiation storms, NOAA S-scale) and the **live ISS position** with South Atlantic Anomaly crossings, plus a solar-particle-event scenario with a storm-shelter workflow. |
 | **Long-duration risks** | Career radiation dose against **NASA's 600 mSv limit**, with a mission-end projection: a conjunction-class Mars mission comes to about 1.1 Sv, which is flagged. Also bone-loss estimates and SANS risk, across ISS, Artemis lunar-surface and Mars-transit profiles. |
+| **Backed by NASA research** | Every diagnosis links to NASA's own reports on that condition, pulled live from the **NASA Technical Reports Server**. For example, an arrhythmia alert links to NASA JSC's *"Risk of Cardiac Rhythm Problems During Spaceflight"*. |
 | **Live fault injection** | Inject a CO₂ scrubber failure, EVA cooling failure, suit O₂ fault, new-onset AF, fever, dehydration or a solar particle event, and watch the system respond. |
 
 **Vital signs monitored per astronaut, every minute:** heart rate, heart-rate variability (RMSSD), SpO₂, respiration rate, core body temperature, systolic blood pressure.
@@ -98,6 +99,7 @@ The whole pipeline runs client-side at about 1 ms per crew-minute, which is ligh
 | [NOAA SWPC GOES integral proton flux](https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json) | Live radiation environment, ≥10 MeV / ≥100 MeV, NOAA S-scale | **Live** |
 | ISS ephemeris (NORAD 25544) via [wheretheiss.at](https://wheretheiss.at) | Live ISS position and South Atlantic Anomaly crossings | **Live** |
 | [NASA GIBS](https://earthdata.nasa.gov/gibs) Blue Marble | ISS ground-track map | **Live** |
+| [**NASA Technical Reports Server (NTRS)**](https://ntrs.nasa.gov) | NASA's own research behind each diagnosis and long-duration risk, e.g. HRP evidence report *"Risk of Cardiac Rhythm Problems During Spaceflight"* (JSC) and *"Spaceflight Associated Neuro-Ocular Syndrome"*. Shown in the **NASA evidence** panel and on every alert. | **Live** through the `/api/nasa` serverless proxy (NTRS sends no CORS headers), with a built-in snapshot ([data/nasa-evidence.json](data/nasa-evidence.json)) for offline use |
 | NASA-STD-3001, NASA Human Research Program, peer-reviewed mission dosimetry | Dose rates, 600 mSv career limit, bone loss, thermoregulation, CO₂ target | Published values |
 | Crew vital signs | Detection and validation | **Simulated** (physiological model) |
 
