@@ -3,7 +3,7 @@
 > **NASA Space Apps Challenge 2026**
 > **Challenge:** *Create Health Monitoring Software for Astronauts on Space Missions*
 
-### 🔗 [**Live app**](https://asclepius-crew-health.vercel.app) · [**Pitch deck**](https://asclepius-crew-health.vercel.app/pitch.html) · [**Demo video**](docs/asclepius-demo.mp4) · [**Pitch video**](docs/asclepius-pitch.mp4) · [**30-second cut**](docs/asclepius-30s.mp4)
+### 🔗 [**Live app**](https://asclepius-crew-health.vercel.app) · [**Pitch deck**](https://asclepius-crew-health.vercel.app/pitch.html) ([PDF](docs/ASCLEPIUS-pitch.pdf) · [PPTX](docs/ASCLEPIUS-pitch.pptx)) · [**60-s video**](https://asclepius-crew-health.vercel.app/docs/asclepius-60s.mp4) · [**30-s video**](https://asclepius-crew-health.vercel.app/docs/asclepius-30s.mp4) · [**Full demo**](https://asclepius-crew-health.vercel.app/docs/asclepius-demo.mp4)
 
 [![ASCLEPIUS demo: a suit oxygen fault is detected, diagnosed and acted on](docs/demo.gif)](docs/asclepius-demo.mp4)
 
@@ -15,7 +15,8 @@
 |---|---|---|
 | [**Demo walkthrough**](docs/asclepius-demo.mp4) | ~1.5 min | Narrated guided tour of the live app: a suit O₂ fault during a spacewalk is detected, diagnosed and acted on. Also covers live radiation, long-term risk and validation. |
 | [**Pitch**](docs/asclepius-pitch.mp4) | ~1.3 min | The problem, the solution, how it works and the proof, in 7 slides with voice-over. Slides: [pitch.html](https://asclepius-crew-health.vercel.app/pitch.html) |
-| [**30-second cut**](docs/asclepius-30s.mp4) | 30 s | Short version for the Space Apps submission: fault → alert → action → results. |
+| [**60-second video**](docs/asclepius-60s.mp4) | 59 s | Local judging cut: problem → solution in action → validated results. |
+| [**30-second cut**](docs/asclepius-30s.mp4) | 30 s | Short version for the NASA Space Apps global submission: alert → action → results. |
 
 ![ASCLEPIUS mission control dashboard](docs/dashboard.png)
 
